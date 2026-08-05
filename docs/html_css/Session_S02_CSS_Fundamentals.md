@@ -21,7 +21,7 @@ HTML answers "what is this?" — a heading, a button, a paragraph. CSS answers a
 
 **CSS stands for Cascading Style Sheets**, and every word in that name is load-bearing:
 - **Style Sheets** — a CSS file is a *sheet of rules*, each rule saying "for elements matching this selector, apply these property values."
-- **Cascading** — this is the word that will occupy most of Section 2, and it's the single most misunderstood idea in CSS by beginners. It means: when *multiple* rules could apply to the same element, there is a precise, deterministic algorithm — not a guess, not "whichever CSS file loads last" — that decides which one wins.
+- **Cascading** — this is the word that will occupy most of Section 3, and it's the single most misunderstood idea in CSS by beginners. It means: when *multiple* rules could apply to the same element, there is a precise, deterministic algorithm — not a guess, not "whichever CSS file loads last" — that decides which one wins.
 
 A CSS rule has this literal shape:
 
@@ -41,7 +41,7 @@ p {
 
 This rule says: "find every `<p>` element, and set its text color to navy and its font size to 16 pixels." `p` is the **selector** (which elements this rule targets). `color: navy;` and `font-size: 16px;` are **declarations** — a property name, a colon, a value, and a semicolon. The whole `{ ... }` block is a **rule** (or "ruleset").
 
-**Predict before you peek:** if you had two separate rules, `p { color: navy; }` and `p { color: red; }`, both in the same file, both matching the exact same `<p>` element — what color do you think the text would actually be? Hold that guess. Section 2 will tell you exactly why, not just what.
+**Predict before you peek:** if you had two separate rules, `p { color: navy; }` and `p { color: red; }`, both in the same file, both matching the exact same `<p>` element — what color do you think the text would actually be? Hold that guess. Section 3 will tell you exactly why, not just what.
 
 ### Getting CSS onto your page
 
@@ -70,13 +70,73 @@ Method 3 is what you'll use from this point forward. Create a second file, `styl
 
 ---
 
-## 2. The Cascade — How Conflicts Get Resolved
+## 2. Common CSS Properties — The Fast-Reference Survey
+
+Before Section 3's mechanism-level deep dive into how conflicting rules get resolved, here is the map of what CSS can actually control — deliberately shallow, a name and a one-line purpose per property, organized by what it affects. Skim this once. Come back to it anytime a property name in a later session doesn't ring a bell.
+
+**Color and background**
+
+| Property | Purpose |
+|---|---|
+| `color` | Text color |
+| `background-color` | The element's own background fill |
+| `background-image` | An image (or gradient) as the background |
+| `opacity` | Fades the *entire* element, including its children — different from a background's own alpha channel |
+
+**Typography**
+
+| Property | Purpose |
+|---|---|
+| `font-family` | Which typeface to use |
+| `font-size` | Text size |
+| `font-weight` | Boldness (`400` normal, `700` bold, etc.) |
+| `line-height` | Vertical spacing between lines of text |
+| `text-align` | Horizontal alignment of text within its box |
+| `text-decoration` | Underline, strikethrough, or none |
+
+**Spacing and sizing** *(Section 4 covers the box model these all belong to, properly)*
+
+| Property | Purpose |
+|---|---|
+| `width`, `height` | The element's own dimensions |
+| `margin` | Space outside the border, between elements |
+| `padding` | Space inside the border, around the content |
+| `max-width`, `min-height` | Upper/lower bounds — the element can shrink or grow but not cross these |
+
+**Borders and radius**
+
+| Property | Purpose |
+|---|---|
+| `border` | A visible line around the padding |
+| `border-radius` | Rounds the corners |
+| `box-shadow` | A drop shadow around the element's box |
+
+**Layout** *(the deepest mechanisms — Section 4 here, and Session S03's Flexbox/Grid)*
+
+| Property | Purpose |
+|---|---|
+| `display` | What layout mode this element participates in (`block`, `inline`, `flex`, `grid`, `none`) |
+| `position` | How the element is positioned relative to its normal place — full depth in Session S03 |
+
+**Effects**
+
+| Property | Purpose |
+|---|---|
+| `transition` | Smooths a property's change over time — full depth in Session S03 |
+| `transform` | Moves, rotates, or scales an element visually, without affecting layout |
+| `cursor` | What the mouse pointer looks like when hovering this element |
+
+That's the map — roughly twenty properties covering every category CSS actually has, before this session spends the next several sections on the *mechanism* questions (which rule wins when two conflict, what "box" even means, how a variable's value flows down the tree) rather than the property list itself. You already used several of these without a name for the category (`color`, `padding`, `border`) in earlier examples — that recognition is exactly the payoff of front-loading the survey.
+
+---
+
+## 3. The Cascade — How Conflicts Get Resolved
 
 Here's the answer to the "predict before you peek" question from Section 1. With `p { color: navy; }` then `p { color: red; }` later in the same file, matching the same specificity exactly, **the text is red** — the *later* rule in the file wins when everything else is tied. This is called **source order**, and it's the simplest of three tie-breaking mechanisms the cascade uses, applied in this exact priority sequence:
 
 ```
 1. IMPORTANCE       → !important declarations, and origin (browser vs. your CSS)
-2. SPECIFICITY      → how "targeted" the selector is (Section 2.2 below)
+2. SPECIFICITY      → how "targeted" the selector is (Section 3.2 below)
 3. SOURCE ORDER      → if 1 and 2 are tied, whichever rule appears LAST wins
 ```
 
@@ -132,7 +192,7 @@ You will meet `@layer` in Session S15 (Tailwind v4), which exists specifically t
 
 ---
 
-## 3. The Box Model — Every Element Is a Box
+## 4. The Box Model — Every Element Is a Box
 
 ### The mental model, built from scratch
 
@@ -222,7 +282,7 @@ An element with `display: none` isn't merely invisible — it has **no box at al
 
 ---
 
-## 4. Units — Choosing the Right One on Purpose
+## 5. Units — Choosing the Right One on Purpose
 
 CSS gives you far more units than "pixels," and the ones you pick shape how your page behaves when a user zooms, resizes their browser, or views it on a phone. Rather than memorizing a list, reason through *why* each exists:
 
@@ -242,7 +302,7 @@ CSS gives you far more units than "pixels," and the ones you pick shape how your
 
 ---
 
-## 5. CSS Custom Properties — Variables With a Superpower
+## 6. CSS Custom Properties — Variables With a Superpower
 
 ### Why this section matters more than its place in the syllabus suggests
 
@@ -301,13 +361,13 @@ body {
 <html class="dark">
 ```
 
-That's the whole mechanism. `:root` sets the light-mode values. `.dark` — a class you can add or remove from `<html>` with one line of future JavaScript — *redeclares the same variable names* with dark-mode values. Because `.dark` is more specific than `:root` (a class beats a pseudo-class targeting the same element, by the specificity rules from Section 2.2 — both are B-category, but if `.dark` is applied directly to `<html>` alongside the implicit root match, the explicit class selector wins the tie), every single `var(--background)` and `var(--text-color)` usage across the *entire page* — no matter how deeply nested — switches instantly and simultaneously the moment that one class is toggled. No JavaScript touches the individual buttons, bubbles, or backgrounds directly; they were never hard-coded to a color in the first place, only ever hard-coded to a *variable name*, and the variable's value is what changes.
+That's the whole mechanism. `:root` sets the light-mode values. `.dark` — a class you can add or remove from `<html>` with one line of future JavaScript — *redeclares the same variable names* with dark-mode values. Because `.dark` is more specific than `:root` (a class beats a pseudo-class targeting the same element, by the specificity rules from Section 3.2 — both are B-category, but if `.dark` is applied directly to `<html>` alongside the implicit root match, the explicit class selector wins the tie), every single `var(--background)` and `var(--text-color)` usage across the *entire page* — no matter how deeply nested — switches instantly and simultaneously the moment that one class is toggled. No JavaScript touches the individual buttons, bubbles, or backgrounds directly; they were never hard-coded to a color in the first place, only ever hard-coded to a *variable name*, and the variable's value is what changes.
 
 > **Explain it back to yourself:** if you added a third selector, `.dark .sidebar { --background: black; }`, overriding `--background` specifically inside the sidebar while dark mode is active, would the sidebar's background differ from the rest of the dark-mode page? *(Yes — because that declaration is more specific and scoped to a smaller subtree; every element inside `.sidebar` inherits the more specific override, while everything outside it still inherits `.dark`'s value. This is the exact mechanism a real design system uses for "mostly-dark-but-this-one-section-is-different" theming.)*
 
 ---
 
-## 6. Selectors and Pseudo-Classes
+## 7. Selectors and Pseudo-Classes
 
 You've already used a handful of selectors without a formal name for them. Let's make the vocabulary precise, and add the ones you'll need starting next session.
 
@@ -326,7 +386,7 @@ p:not(.highlighted) { }   /* any <p> WITHOUT this class */
 
 ---
 
-## 7. Capstone Exercise — The BIA Design System File
+## 8. Capstone Exercise — The BIA Design System File
 
 Time to build something real: the actual CSS foundation the syllabus's Session S02 exercise asks for — a single stylesheet defining the BIA chat UI's entire color system for both light and dark mode, using nothing but this session's content.
 
@@ -385,23 +445,23 @@ body {
 }
 ```
 
-Notice every rule in this file traces back to something explained above: `box-sizing: border-box` (Section 3), the light/dark custom property pair (Section 5), `rem` for spacing (Section 4), and zero hard-coded colors anywhere outside the two `:root`/`.dark` blocks — exactly the discipline that makes the dark-mode toggle mechanism from Section 5 actually work.
+Notice every rule in this file traces back to something explained above: `box-sizing: border-box` (Section 4), the light/dark custom property pair (Section 6), `rem` for spacing (Section 5), and zero hard-coded colors anywhere outside the two `:root`/`.dark` blocks — exactly the discipline that makes the dark-mode toggle mechanism from Section 6 actually work.
 
 > **Do this now:** link this stylesheet to your `chat-shell.html` from Session S01, apply the `.btn-primary`, `.card`, and `.input` classes to the appropriate elements, then manually add `class="dark"` to your `<html>` tag and reload. Every color should flip simultaneously. Remove the class, reload again, confirm it flips back. This is the entire mechanism Session S15 builds Tailwind's `@theme` system on top of — you're seeing the whole thing, unabstracted, right now.
 
 ---
 
-## 8. Production Relevance
+## 9. Production Relevance
 
 **Every major design system in production — Material Design, Tailwind, Radix Themes, and the BIA UI itself — uses exactly this custom-properties-plus-class-toggle mechanism for theming**, not a JavaScript-driven style-recalculation system, specifically because it's instantaneous (the browser's own cascade does the work, not a script re-rendering every component) and because it requires zero coordination between components — a button built in complete isolation from the sidebar still participates correctly in the same theme switch, because both only ever reference the shared variable names.
 
 **GitHub's own web interface** is a well-documented public example of this exact pattern: its dark-mode support is implemented via CSS custom properties toggled by a data attribute on the root element, not by maintaining two entirely separate stylesheets — precisely because maintaining parallel light/dark versions of every single color declaration across a codebase that size becomes unmanageable, while a shared variable name with two possible values does not.
 
-**Specificity bugs are, empirically, one of the most common sources of "CSS isn't working" confusion reported by working developers** — not because the algorithm is exotic, but because most people never learn to compute it by hand the way Section 2.2 just walked you through, and instead resort to guessing, adding `!important`, or duplicating selectors until something sticks. Being able to actually calculate `(A, B, C)` on sight is a genuine, durable skill difference between "I copy CSS until it looks right" and "I can debug this."
+**Specificity bugs are, empirically, one of the most common sources of "CSS isn't working" confusion reported by working developers** — not because the algorithm is exotic, but because most people never learn to compute it by hand the way Section 3.2 just walked you through, and instead resort to guessing, adding `!important`, or duplicating selectors until something sticks. Being able to actually calculate `(A, B, C)` on sight is a genuine, durable skill difference between "I copy CSS until it looks right" and "I can debug this."
 
 ---
 
-## 9. Practice Exercises
+## 10. Practice Exercises
 
 All three are solvable using only Sessions S01 and S02's content.
 
@@ -423,17 +483,17 @@ Given this CSS, a designer says "the card should be exactly 300px wide, but it's
 ```
 Diagnose the actual rendered width without a browser (do the arithmetic by hand), explain in one sentence *why* it's wider than 300px, and write the one-line fix that makes 300px the true final width.
 
-**Success criteria:** your stated "actual width" arithmetic matches `300 + 48 + 4 = 352px`, and your fix is the global `box-sizing: border-box` rule (or, acceptably, `box-sizing: border-box` scoped to `.card` alone, with a note on why the global rule from Section 3 is still the better long-term choice).
+**Success criteria:** your stated "actual width" arithmetic matches `300 + 48 + 4 = 352px`, and your fix is the global `box-sizing: border-box` rule (or, acceptably, `box-sizing: border-box` scoped to `.card` alone, with a note on why the global rule from Section 4 is still the better long-term choice).
 
 ### Exercise 3 (Hard) — Build a Three-Theme Toggle System
 
-Extend Section 7's capstone file to support **three** themes instead of two: light, dark, and a "high-contrast" theme (very high contrast between background and text, e.g., pure black background with pure white text and a bright yellow `--primary`), switchable by applying one of three classes (`.light`, `.dark`, `.high-contrast`) to `<html>`. Add a fourth custom property, `--focus-ring-color`, used only on `:focus-visible` outlines, with a different value in each of the three themes.
+Extend Section 8's capstone file to support **three** themes instead of two: light, dark, and a "high-contrast" theme (very high contrast between background and text, e.g., pure black background with pure white text and a bright yellow `--primary`), switchable by applying one of three classes (`.light`, `.dark`, `.high-contrast`) to `<html>`. Add a fourth custom property, `--focus-ring-color`, used only on `:focus-visible` outlines, with a different value in each of the three themes.
 
 **Success criteria:** all three themes render correctly with zero hard-coded colors anywhere outside the three theme-selector blocks; tabbing through your page in each theme shows a visibly different, theme-appropriate focus ring color in each of the three modes.
 
 ---
 
-## 10. Common Pitfalls
+## 11. Common Pitfalls
 
 ### Pitfall 1 — Forgetting `box-sizing: border-box`, then "fixing" widths by trial and error
 
@@ -495,18 +555,18 @@ Extend Section 7's capstone file to support **three** themes instead of two: lig
 
 ---
 
-## 11. Further Reading
+## 12. Further Reading
 
 **MDN — Learn: CSS Cascade, Specificity, and Inheritance**
-The official, canonical explanation of everything in Section 2 — read this if the worked specificity examples above need a second explanation in different words.
+The official, canonical explanation of everything in Section 3 — read this if the worked specificity examples above need a second explanation in different words.
 https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Handling_conflicts
 
 **MDN — Using CSS Custom Properties (Variables)**
-The authoritative source for Section 5's inheritance and fallback behavior — includes the `@property` at-rule for advanced use cases beyond this session's scope.
+The authoritative source for Section 6's inheritance and fallback behavior — includes the `@property` at-rule for advanced use cases beyond this session's scope.
 https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
 
 **MDN — The Box Model**
-The official reference for Section 3, including `box-sizing`'s full specification.
+The official reference for Section 4, including `box-sizing`'s full specification.
 https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model
 
 **The Odin Project — Introduction to CSS / The Cascade**
@@ -519,26 +579,26 @@ https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 ---
 
-## 12. How This Session Compares to The Odin Project
+## 13. How This Session Compares to The Odin Project
 
 Odin's Foundations course covers the cascade, specificity, and the box model — but at noticeably lighter depth than this session, and by explicit design: Odin's own introduction lesson states plainly that deeper CSS (variables, functions, shadows, Grid) is intentionally deferred to later in its curriculum, with this early material meant as a first pass, not the full treatment.
 
 **What this session covers that Odin's equivalent lesson doesn't reach yet:**
-- **CSS Custom Properties** (Section 5) — Odin's own materials explicitly flag variables as "learned throughout this course," not in its foundational cascade lesson; you're getting the full mechanism now, Session 2, because the dark-mode toggle it enables is load-bearing for the rest of this syllabus.
-- **The exact three-part specificity scoring system**, computed by hand on real worked examples (Section 2.2) — most introductory resources, Odin included at this stage, describe specificity conceptually without walking through the actual arithmetic the way this session does.
-- **The `dvh` unit and its mobile-viewport rationale** (Section 4) — a genuinely modern addition most Foundations-level material predates.
+- **CSS Custom Properties** (Section 6) — Odin's own materials explicitly flag variables as "learned throughout this course," not in its foundational cascade lesson; you're getting the full mechanism now, Session 2, because the dark-mode toggle it enables is load-bearing for the rest of this syllabus.
+- **The exact three-part specificity scoring system**, computed by hand on real worked examples (Section 3.2) — most introductory resources, Odin included at this stage, describe specificity conceptually without walking through the actual arithmetic the way this session does.
+- **The `dvh` unit and its mobile-viewport rationale** (Section 5) — a genuinely modern addition most Foundations-level material predates.
 
-**What to use Odin for, alongside this:** Odin's box-model and cascade lessons are a good second explanation in different words if anything here didn't click the first time, and its exercises are additional practice reps beyond the three in Section 9 — treat the two as complementary, not redundant, exactly as established in Session S01.
+**What to use Odin for, alongside this:** Odin's box-model and cascade lessons are a good second explanation in different words if anything here didn't click the first time, and its exercises are additional practice reps beyond the three in Section 10 — treat the two as complementary, not redundant, exactly as established in Session S01.
 
 ---
 
-## 13. Bridge to Session S03
+## 14. Bridge to Session S03
 
 Everything today assumed elements simply stack top-to-bottom, one after another — the browser's default "normal flow." Session S03 breaks that assumption open: Flexbox and Grid, the two layout systems that let you actually arrange the sidebar-plus-main-content shell your `chat-shell.html` needs, plus `position: sticky` for the header and input bar that need to stay put while everything else scrolls. Every box-model concept from today carries forward unchanged — Flexbox and Grid don't replace the box model, they just give you new ways to arrange *where* those boxes sit relative to each other.
 
 ---
 
-## 14. Key Takeaways Checklist
+## 15. Key Takeaways Checklist
 
 - [ ] State, from memory, the three-step cascade tiebreaker order (importance → specificity → source order)
 - [ ] Compute the `(A, B, C)` specificity score for any selector by hand, without a tool
@@ -750,3 +810,17 @@ FIX:     --primary: hsl(356 82% 50%);  (one complete value per variable)
 **No new gate failures found.** The 42/42 score stands; this addition is best understood as closing a completeness gap discovered by cross-referencing two already-approved documents against each other, which is precisely the kind of defect an isolated single-document Pass 2 cannot catch — it required checking S01 and S02 against each other directly, as requested.
 
 **Verdict (Revision 2): APPROVED. Cross-document consistency with Session S01 confirmed and the one finding is closed.**
+
+---
+
+## Revision 3 — Adding the "Basics Before Specifics" Survey
+
+*Same triggering feedback and same principle as Session S01's Revision 3: a fast, broad map of CSS's property categories should precede the mechanism-level deep dive into the cascade, not be assumed or introduced piecemeal.*
+
+**Finding:** Sections 3 through 6 (Cascade, Box Model, Units, Custom Properties) each introduce properties in service of a specific mechanism, but nothing gave a fast, low-depth survey of ordinary property names — `font-weight`, `box-shadow`, `cursor` — before the mechanism explanations began.
+
+**Fix applied:** a new Section 2, "Common CSS Properties — The Fast-Reference Survey," inserted after Section 1 (Core Concept) and before Section 3 (The Cascade), organized by category (color/background, typography, spacing/sizing, borders, layout, effects), deliberately shallow. Sections 3 through 14 renumbered to 4 through 15 to accommodate it. Every internal cross-reference in the document body was re-derived from the actual current header map and mechanically re-verified — 24 "Section N" references checked, zero resolving to a non-existent or wrong section after the fix.
+
+**Errors caught during this exact process, disclosed rather than corrected silently:** the newly-written survey table itself initially cited "Section 3" for both the box-model and layout parenthetical asides — written before the shift was finalized, and wrong the moment Box Model moved from position 3 to position 4. Additionally, two pre-existing references to the specificity worked-examples subsection said "Section 2.2" (correct when Cascade was Section 2) and needed to become "Section 3.2" now that Cascade is Section 3. Both are the same class of error Revision 3 caught in Session S01 — a number that was correct at the moment of writing, invalidated by a subsequent structural edit, and only caught by mechanically testing every reference against the actual current header map rather than trusting the text as typed.
+
+**Verdict (Revision 3): APPROVED. The basics-before-specifics sequencing gap is closed; all 24 cross-references mechanically re-verified against the current header map.**
