@@ -46,6 +46,7 @@ An HTML "tag" is the basic unit of HTML. It looks like this:
 ```
 
 Break that down:
+
 - `<tagname>` is the **opening tag**. The angle brackets `<` and `>` are not part of the name — they're punctuation that says "a tag starts here."
 - `</tagname>` is the **closing tag** — identical to the opening tag but with a `/` before the name. It says "the thing that started at the opening tag ends here."
 - Everything between the opening and closing tag is the **content** — and that content can itself contain more tags, nested inside. This is exactly like nesting Python dictionaries or nesting function calls: a tag can contain other tags, which can contain other tags, as deep as you need.
@@ -71,26 +72,26 @@ Every HTML document you will ever write in your entire career starts with the sa
 </html>
 ```
 
-- **`<!DOCTYPE html>`** — This is not actually an HTML tag. It's a one-line instruction to the browser that says "parse everything that follows using the modern HTML5 rules, not some ancient 1998 rule set." Think of it like a Python file's `#!/usr/bin/env python3` shebang line — it's a declaration about *how to interpret what follows*, not content itself. Every HTML file needs exactly one, as the very first line, with nothing before it.
+- `<!DOCTYPE html>` — This is not actually an HTML tag. It's a one-line instruction to the browser that says "parse everything that follows using the modern HTML5 rules, not some ancient 1998 rule set." Think of it like a Python file's `#!/usr/bin/env python3` shebang line — it's a declaration about *how to interpret what follows*, not content itself. Every HTML file needs exactly one, as the very first line, with nothing before it.
 
-- **`<html lang="en">`** — This is the root tag. Every other tag in the document lives inside this one — it's the outermost container, exactly like how every key in a Python dict lives inside that one dict. The `lang="en"` attribute tells browsers and screen readers "this document's text is in English" — screen readers use this to pick the correct pronunciation engine, and browsers use it for things like spell-check and translation prompts. If you're writing a page in French, this would be `lang="fr"`.
+- `<html lang="en">` — This is the root tag. Every other tag in the document lives inside this one — it's the outermost container, exactly like how every key in a Python dict lives inside that one dict. The `lang="en"` attribute tells browsers and screen readers "this document's text is in English" — screen readers use this to pick the correct pronunciation engine, and browsers use it for things like spell-check and translation prompts. If you're writing a page in French, this would be `lang="fr"`.
 
-- **`<head>`** — This section holds *metadata*: information *about* the page that isn't shown as visible content on the page itself. Nothing inside `<head>` appears in the visible chat window — it configures the document.
+- `<head>` — This section holds *metadata*: information *about* the page that isn't shown as visible content on the page itself. Nothing inside `<head>` appears in the visible chat window — it configures the document.
 
-- **`<meta charset="UTF-8" />`** — Declares the character encoding. UTF-8 supports every character in every language plus emoji — this is the encoding you want in 100% of cases in 2026. Without this line, some browsers will guess the encoding wrong and your page will show garbled text ("mojibake") the moment a user's message contains an emoji or a non-English character — extremely relevant for a chat app.
+- `<meta charset="UTF-8" />` — Declares the character encoding. UTF-8 supports every character in every language plus emoji — this is the encoding you want in 100% of cases in 2026. Without this line, some browsers will guess the encoding wrong and your page will show garbled text ("mojibake") the moment a user's message contains an emoji or a non-English character — extremely relevant for a chat app.
 
-- **`<meta name="viewport" content="width=device-width, initial-scale=1.0" />`** — This one line is what makes your page work on a phone at all. Without it, mobile browsers assume your page was designed for a desktop-width screen (usually 980px) and shrink the entire page to fit, making everything tiny and requiring the user to pinch-zoom. `width=device-width` says "use the actual width of this device's screen." `initial-scale=1.0` says "start at 100% zoom, don't shrink." You will put this exact line in every single HTML page you ever write.
+- `<meta name="viewport" content="width=device-width, initial-scale=1.0" />` — This one line is what makes your page work on a phone at all. Without it, mobile browsers assume your page was designed for a desktop-width screen (usually 980px) and shrink the entire page to fit, making everything tiny and requiring the user to pinch-zoom. `width=device-width` says "use the actual width of this device's screen." `initial-scale=1.0` says "start at 100% zoom, don't shrink." You will put this exact line in every single HTML page you ever write.
 
-- **`<title>Chat</title>`** — The text shown in the browser tab and in bookmarks. Not visible inside the page itself.
+- `<title>Chat</title>` — The text shown in the browser tab and in bookmarks. Not visible inside the page itself.
 
-- **`<body>`** — Everything the user actually *sees* goes here. Every visible element of your chat application — the sidebar, the messages, the input box — lives inside `<body>`.
+- `<body>` — Everything the user actually *sees* goes here. Every visible element of your chat application — the sidebar, the messages, the input box — lives inside `<body>`.
 
 ### Landmark elements — giving structure to the body
 
 Inside `<body>`, HTML5 gives you a set of **semantic landmark elements** — tags whose *name* tells you and the browser what role that section of the page plays, instead of using a generic, meaningless container everywhere. Here they are:
 
 | Tag | What it means | Chat UI example |
-|---|---|---|
+| --- | --- | --- |
 | `<header>` | Introductory content, usually at the top | The bar with the chat title and sidebar toggle |
 | `<nav>` | A block of navigation links | The sidebar's list of past conversations |
 | `<main>` | The primary content of the page — **only one per page** | The message list and input area |
@@ -103,7 +104,7 @@ Compare this to the "before" state, which is how HTML used to be written and how
 
 ### Heading hierarchy
 
-`<h1>` through `<h6>` are heading tags, in decreasing importance. The rule that trips up almost every beginner: **there should be exactly one `<h1>` per page** — it's the single most important heading, like the title of a book. `<h2>` are the next level down (chapter titles), `<h3>` below that (section titles within a chapter), and so on. You should never skip a level going *down* (don't jump from `<h1>` straight to `<h3>` — go through `<h2>` first), though you can jump back *up* any number of levels. Screen reader users very commonly navigate a page by jumping between headings only — this is the equivalent of skimming a table of contents — so a broken hierarchy (or a page using `<div class="heading">` styled to *look* like a heading but not actually being one) makes that navigation impossible.
+`<h1>` through `<h6>` are heading tags, in decreasing importance. The rule that trips up almost every beginner: **there should be exactly one** `<h1>` **per page** — it's the single most important heading, like the title of a book. `<h2>` are the next level down (chapter titles), `<h3>` below that (section titles within a chapter), and so on. You should never skip a level going *down* (don't jump from `<h1>` straight to `<h3>` — go through `<h2>` first), though you can jump back *up* any number of levels. Screen reader users very commonly navigate a page by jumping between headings only — this is the equivalent of skimming a table of contents — so a broken hierarchy (or a page using `<div class="heading">` styled to *look* like a heading but not actually being one) makes that navigation impossible.
 
 ### `button` vs `div` for clicks — the concept, not just the gotcha
 
@@ -139,18 +140,18 @@ You might think: "My chat app just has one text box and a send button — do I r
 </form>
 ```
 
-- **`<label for="chat-input">`** — This is the single most important accessibility pattern in all of HTML forms, and it is also just good practice for every user, not only screen reader users. The `for` attribute must exactly match the `id` attribute of the input it labels. This does two things: (1) it gives the input an accessible name that a screen reader announces ("Your message, edit text" instead of just "edit text"), and (2) clicking anywhere on the label text moves keyboard focus to the input — try clicking directly on a form label on any real website and watch the cursor jump into the box next to it. That's this pattern, working.
+- `<label for="chat-input">` — This is the single most important accessibility pattern in all of HTML forms, and it is also just good practice for every user, not only screen reader users. The `for` attribute must exactly match the `id` attribute of the input it labels. This does two things: (1) it gives the input an accessible name that a screen reader announces ("Your message, edit text" instead of just "edit text"), and (2) clicking anywhere on the label text moves keyboard focus to the input — try clicking directly on a form label on any real website and watch the cursor jump into the box next to it. That's this pattern, working.
 
-- **`<input>`** — The workhorse tag for a single line of user-entered data. Note it has no closing tag (it's a void element, from Topic 1) and its behavior is entirely controlled by its `type` attribute.
+- `<input>` — The workhorse tag for a single line of user-entered data. Note it has no closing tag (it's a void element, from Topic 1) and its behavior is entirely controlled by its `type` attribute.
 
-- **`name="message"`** — This is the key that this field's value will be submitted under. If you don't know backend form handling terminology yet: think of `name` as the dictionary key, and whatever the user types as the dictionary value. When this form is submitted, the browser bundles it conceptually as `{"message": "whatever the user typed"}`.
+- `name="message"` — This is the key that this field's value will be submitted under. If you don't know backend form handling terminology yet: think of `name` as the dictionary key, and whatever the user types as the dictionary value. When this form is submitted, the browser bundles it conceptually as `{"message": "whatever the user typed"}`.
 
 ### The input types that matter
 
 The `type` attribute on `<input>` is doing a lot of work — it changes the on-screen keyboard on mobile, changes what the browser validates automatically, and sometimes changes the rendered widget entirely.
 
 | `type` value | What it does |
-|---|---|
+| --- | --- |
 | `text` | Plain single-line text, no special validation |
 | `email` | Shows an `@`-friendly keyboard on mobile; browser validates it looks like an email address before allowing submit |
 | `password` | Masks the characters as dots on screen |
@@ -166,9 +167,9 @@ The `type` attribute on `<input>` is doing a lot of work — it changes the on-s
 <input type="email" required minlength="5" />
 ```
 
-- **`required`** — the browser refuses to submit the form (and shows a small tooltip pointing at the field) if it's empty. No JavaScript needed.
-- **`min` / `max`** — for numeric or date inputs, sets the allowed range.
-- **`pattern`** — a regular expression the value must match (you already know regex from Python — the syntax is nearly identical).
+- `required` — the browser refuses to submit the form (and shows a small tooltip pointing at the field) if it's empty. No JavaScript needed.
+- `min` **/** `max` — for numeric or date inputs, sets the allowed range.
+- `pattern` — a regular expression the value must match (you already know regex from Python — the syntax is nearly identical).
 
 This is called **native form validation**, and the reason it matters: it works *before any JavaScript has even loaded*. If your page's JavaScript bundle is still downloading (very common on a slow connection), a user trying to submit an empty required field still gets instant feedback, because the browser itself — not your code — is enforcing the rule.
 
@@ -219,9 +220,9 @@ Without the `aria-label`, a screen reader would announce this button as just "bu
 
 This is the property your chat application's message list depends on completely, and it's worth understanding precisely, not just as a magic incantation. A **live region** is any part of the page marked so that when its content changes — without the user doing anything to trigger it directly, like new tokens streaming in from an AI response — a screen reader announces the change automatically. `aria-live` takes exactly three values:
 
-- **`off`** (the default for ordinary content) — changes are not announced at all.
-- **`polite`** — the change is announced, but only once the screen reader finishes whatever it's currently reading. This is what you want for a chat message list: new messages get read out, but never *interrupt* a user who is mid-sentence listening to an earlier message.
-- **`assertive`** — the change is announced immediately, interrupting whatever is currently being read. Reserve this for genuinely urgent alerts only (a failed payment, a security warning) — using it for routine content is jarring and is considered a misuse of the attribute.
+- `off` (the default for ordinary content) — changes are not announced at all.
+- `polite` — the change is announced, but only once the screen reader finishes whatever it's currently reading. This is what you want for a chat message list: new messages get read out, but never *interrupt* a user who is mid-sentence listening to an earlier message.
+- `assertive` — the change is announced immediately, interrupting whatever is currently being read. Reserve this for genuinely urgent alerts only (a failed payment, a security warning) — using it for routine content is jarring and is considered a misuse of the attribute.
 
 ```html
 <div id="message-list" aria-live="polite">
@@ -251,7 +252,7 @@ Earlier in Topic 1, you learned to always prefer a real `<button>`. But suppose 
 <div tabindex="0" role="button">Click me!</div>
 ```
 
-`role="button"` tells a screen reader to announce this element as a button. `tabindex="0"` inserts it into the normal keyboard Tab order at its natural position in the page (a value of `-1` would make it focusable only via JavaScript, not via Tab). But — and this is the critical, easy-to-miss catch, confirmed directly in the current MDN guidance — **adding the role and the tabindex does not give you any of the actual keyboard *behavior* a real button has**. A real `<button>` fires its click handler when the user presses Enter *or* Space, automatically, with zero extra code. This fake `<div>` button does neither — you would have to write your own JavaScript to listen for Enter and Space key presses and trigger the same action a click would. This is exactly why the Pitfall for this session — and the reason it's rule #1 for the rest of this roadmap — is: **use `role="button"` on a div only as a last resort, and know that you are taking on real extra work by doing so.**
+`role="button"` tells a screen reader to announce this element as a button. `tabindex="0"` inserts it into the normal keyboard Tab order at its natural position in the page (a value of `-1` would make it focusable only via JavaScript, not via Tab). But — and this is the critical, easy-to-miss catch, confirmed directly in the current MDN guidance — **adding the role and the tabindex does not give you any of the actual keyboard *behavior* a real button has**. A real `<button>` fires its click handler when the user presses Enter *or* Space, automatically, with zero extra code. This fake `<div>` button does neither — you would have to write your own JavaScript to listen for Enter and Space key presses and trigger the same action a click would. This is exactly why the Pitfall for this session — and the reason it's rule #1 for the rest of this roadmap — is: **use** `role="button"` **on a div only as a last resort, and know that you are taking on real extra work by doing so.**
 
 ---
 
@@ -330,13 +331,13 @@ If it helps: think of the **DOM** as the browser's live, in-memory, queryable ve
 
 This topic doesn't introduce new tags — it's where the previous four topics get applied specifically to the thing you're actually building over the next 36 days: a production LLM chat interface. This is the organic connective tissue the syllabus asks for.
 
-**Every interactive element must be a real `<button>`, never a `<div>` with a click handler.** This is Topic 1's rule, applied concretely: the Send button, the Stop-generation button, the delete-conversation button, and every dropdown-menu trigger in your eventual chat sidebar all must be genuine `<button>` tags. You'll see exactly why in this session's Pitfalls section below.
+**Every interactive element must be a real** `<button>`**, never a** `<div>` **with a click handler.** This is Topic 1's rule, applied concretely: the Send button, the Stop-generation button, the delete-conversation button, and every dropdown-menu trigger in your eventual chat sidebar all must be genuine `<button>` tags. You'll see exactly why in this session's Pitfalls section below.
 
-**Tab order follows DOM order, unless `tabindex` overrides it.** When a user presses Tab repeatedly, focus moves through interactive elements *in the exact order they appear in your HTML* — top to bottom, as written. This means the *order you write your tags in* is not a cosmetic choice — it directly determines the keyboard navigation experience. If your sidebar's HTML appears before your message list in the document, a keyboard user tabs through the entire sidebar before ever reaching the chat input, even if the input is visually first on screen (visual position, controlled by CSS, and DOM/tab order are two separate things — you'll see this distinction sharpen further once you learn CSS positioning in Session S03).
+**Tab order follows DOM order, unless** `tabindex` **overrides it.** When a user presses Tab repeatedly, focus moves through interactive elements *in the exact order they appear in your HTML* — top to bottom, as written. This means the *order you write your tags in* is not a cosmetic choice — it directly determines the keyboard navigation experience. If your sidebar's HTML appears before your message list in the document, a keyboard user tabs through the entire sidebar before ever reaching the chat input, even if the input is visually first on screen (visual position, controlled by CSS, and DOM/tab order are two separate things — you'll see this distinction sharpen further once you learn CSS positioning in Session S03).
 
 **Focus rings must never be removed without a replacement.** A "focus ring" is the visible outline the browser draws around whatever element currently has keyboard focus — it's how a keyboard-only user (or anyone who's ever accidentally clicked and lost their mouse, or anyone using switch-access hardware) can *see* where they currently are on the page. `outline: none` in CSS (coming in Session S02) removes this ring. Removing it without providing a different visible replacement makes your entire application unusable for keyboard navigation — the user has no way to know which element is about to activate when they press Enter. Keep this rule in your head now, three sessions before you'll be tempted to write that exact line of CSS because a plain focus ring "doesn't match the design."
 
-**The message list needs `aria-live="polite"`.** This is Topic 3's live region concept, applied directly: as new assistant tokens stream in (which you'll build for real starting in Session S08), a screen reader user needs to be told new content has arrived, without every single token interrupting their reading of the previous message. `polite`, not `assertive` — a wall of interruptions on every token would make the experience worse, not better.
+**The message list needs** `aria-live="polite"`**.** This is Topic 3's live region concept, applied directly: as new assistant tokens stream in (which you'll build for real starting in Session S08), a screen reader user needs to be told new content has arrived, without every single token interrupting their reading of the previous message. `polite`, not `assertive` — a wall of interruptions on every token would make the experience worse, not better.
 
 ---
 
@@ -407,6 +408,7 @@ This is the session's primary exercise, taken directly from the syllabus. Build 
 ### Pitfall 1 — Using `<div onclick="...">` instead of `<button>`
 
 **WRONG (what developers actually write, especially when copying a design from Figma):**
+
 ```html
 <div class="send-button" onclick="sendMessage()">Send</div>
 ```
@@ -416,14 +418,17 @@ This is the session's primary exercise, taken directly from the syllabus. Build 
 **WHY:** `<div>` is a purely generic container. It carries zero built-in semantics and zero built-in keyboard behavior. Giving it an `onclick` attribute only wires up the *mouse* click event — it does nothing for keyboard interaction, and it gives screen readers no role to announce.
 
 **FIX:**
+
 ```html
 <button type="button" class="send-button">Send</button>
 ```
+
 A real `<button>` is automatically part of the Tab order, automatically fires its click handler on both Enter and Space, and is automatically announced by every screen reader as "Send, button" with zero extra code required.
 
 ### Pitfall 2 — The `<button>` inside a `<form>` that silently submits and reloads the page
 
 **WRONG (this is the single most common surprising bug for developers new to forms, and it will bite you again in three months when you rebuild this exact chat input in React):**
+
 ```html
 <form>
   <textarea name="message"></textarea>
@@ -436,12 +441,14 @@ A real `<button>` is automatically part of the Tab order, automatically fires it
 **WHY:** Inside a `<form>`, any `<button>` with no explicit `type` attribute *defaults to* `type="submit"`. A submit button's entire native job is to trigger the form's submission — which, with no other instructions, means "navigate the browser to this same URL, sending the form's data along as a query string." This is completely correct, expected behavior for a `<button>` in a form — it is not a bug in the browser. It only becomes a bug in *your* app because you didn't intend to trigger a full navigation; you intended to run some JavaScript that sends the message quietly in the background (which you'll build starting in Session S08).
 
 **FIX:**
+
 ```html
 <form>
   <textarea name="message"></textarea>
   <button type="button">Send</button>
 </form>
 ```
+
 Explicitly writing `type="button"` tells the browser "this button does not submit anything on its own — its behavior is entirely up to whatever JavaScript I attach to it later." Every send button, stop button, and action button you build for the rest of this roadmap that lives inside a `<form>` needs this explicit `type="button"` — it is one of the most frequently hit bugs in React single-page applications built by developers who learned React before they learned plain HTML forms, which is exactly the trap this session is designed to prevent you from ever falling into.
 
 ---
@@ -481,6 +488,7 @@ https://developer.chrome.com/docs/devtools/open
 You now have the vocabulary and mental model for: the DOCTYPE/html/head/body skeleton, every landmark element, forms and native validation, the three ARIA concepts (roles, properties, states) and specifically `aria-live` for streaming content, the browser's rendering pipeline and why script placement matters, and how to open and navigate DevTools. Every one of these becomes load-bearing almost immediately: **Session S02 (CSS Fundamentals)** takes the exact HTML skeleton and landmark elements you just built and starts controlling their *appearance* — you'll finally get to make that chat shell from Exercise 3 look like an actual application instead of plain black text on a white background. The semantic tags you chose today (`<button>`, `<nav>`, `<header>`) are not just an accessibility nicety — CSS in Session S02 and S03 specifically targets and lays out these same tags, so getting the HTML right today directly determines how much friction you'll feel styling it tomorrow.
 
 ---
+
 ---
 
 # QA AUDIT REPORT — Session S01

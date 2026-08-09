@@ -1,11 +1,12 @@
 # Session S04 — Foundation Project
+
 ### Static Chat UI: Pixel-Perfect, Responsive & Accessible
 
 **Syllabus position:** Phase F1 (HTML/CSS Foundations) · Day 4 of 37 · AgentStack Golden Canon v8 Slim · **Phase F1 capstone**
 **Prerequisites:** Sessions S01 (HTML5), S02 (CSS Fundamentals), S03 (CSS Layout)
 **Companion track:** The Odin Project — see Section 12 for how this milestone lines up with pausing on Odin
 **Standing objective:** unchanged — genuine understanding over copy-paste. Today looks slightly different in format: fewer new concepts, more building, because this is a consolidation day, not a new-material day.
-**Time budget:** ~3 hours
+**Time budget:** \~3 hours
 
 ---
 
@@ -92,7 +93,7 @@ Pure application — no new theory, genuinely this time. This is exactly the mom
 }
 ```
 
-**Explain it back to yourself before reading on:** why does `.message.user` need `justify-content: flex-end` at all — what does that property even do here, and why does the *assistant* message need no equivalent rule? *(`.message` is a flex container; `justify-content: flex-end` pushes its one child — the bubble — to the end of the main axis, which right-aligns it. The assistant message has no such rule because `flex-start`, the default, already left-aligns it — there's nothing to override.)* If that answer didn't come immediately, that's Session S02/S03 territory, not new content — go back before continuing.
+**Explain it back to yourself before reading on:** why does `.message.user` need `justify-content: flex-end` at all — what does that property even do here, and why does the *assistant* message need no equivalent rule? *(*`.message` *is a flex container;* `justify-content: flex-end` *pushes its one child — the bubble — to the end of the main axis, which right-aligns it. The assistant message has no such rule because* `flex-start`*, the default, already left-aligns it — there's nothing to override.)* If that answer didn't come immediately, that's Session S02/S03 territory, not new content — go back before continuing.
 
 ---
 
@@ -171,9 +172,13 @@ The staggered `animation-delay` on the second and third dots (0.2s and 0.4s late
 This section introduces no new technique at all — it's a formal checklist version of requirements S01 already established, applied now to a complete, real interface rather than isolated examples.
 
 - [ ] Tab through every interactive element (sidebar toggle, every history item, Send, Stop, every dropdown trigger) and confirm the order matches the visual layout, top to bottom, left to right
+
 - [ ] Confirm `aria-live="polite"` is present on the message list container (S01, Section 8)
+
 - [ ] Confirm the message input has `aria-label="Send a message"` if its visual label is only a placeholder, not real `<label>` text
+
 - [ ] Confirm every button has a visible focus ring — zero instances of `outline: none` anywhere without a replacement focus style (S01's explicit hard requirement)
+
 - [ ] Confirm decorative icons (the shimmer skeleton, the typing dots) carry `aria-hidden="true"` if they convey no information a screen reader needs to announce separately from the surrounding text
 
 Run this exact checklist against your actual build below before considering it done — a checklist you don't run against real work isn't actually an audit, it's a reading exercise.
@@ -537,6 +542,7 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 ### Pitfall 1 — Forgetting the `-webkit-` scrollbar prefix, then wondering why Chrome looks wrong
 
 **WRONG:**
+
 ```css
 .message-list {
   scrollbar-width: thin;
@@ -549,6 +555,7 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 **WHY:** `scrollbar-width`/`scrollbar-color` are the modern standardized properties, supported by Firefox and increasingly by Chromium, but full, reliable coverage across all Chromium-based browsers today still requires the older `::-webkit-scrollbar` pseudo-element family alongside them — the two mechanisms don't fall back to each other automatically.
 
 **FIX:**
+
 ```css
 .message-list {
   scrollbar-width: thin;
@@ -561,6 +568,7 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 ### Pitfall 2 — Skeleton dimensions that don't match the real content they replace
 
 **WRONG:**
+
 ```css
 .skeleton { height: 12px; }
 /* ...but the real sidebar item, once loaded, is 20px tall with padding */
@@ -576,15 +584,15 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 
 ## 12. Further Reading
 
-**MDN — `backdrop-filter`**
+**MDN —** `backdrop-filter`
 The official reference for today's glassmorphism technique.
 https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
 
-**MDN — `field-sizing`**
+**MDN —** `field-sizing`
 The official, current reference for the auto-resizing textarea property — check this page directly for the latest browser support table before relying on it in any project beyond this syllabus.
 https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing
 
-**MDN — General sibling combinator (`~`)**
+**MDN — General sibling combinator (**`~`**)**
 The official reference for the selector mechanism behind today's checkbox-hack toggle.
 https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator
 
@@ -607,16 +615,23 @@ One thing worth carrying into that pause deliberately: Odin's Flexbox unit, as n
 ## 14. Key Takeaways Checklist
 
 - [ ] Explain what `backdrop-filter` blurs, specifically, and how it differs from applying `filter: blur()` directly to an element
+
 - [ ] Explain the general sibling selector (`~`) and how it, combined with `:checked` and `label[for]`, produces interactivity with zero JavaScript
+
 - [ ] State the accessibility limitation of the checkbox-hack toggle precisely, in terms of what a screen reader announces
+
 - [ ] Explain what `field-sizing: content` replaces, and why the thing it replaces was expensive (tying back to Session S01's rendering pipeline)
+
 - [ ] State the "same dimensions as final content" rule for skeleton loaders, and why breaking it causes a layout shift
+
 - [ ] Name both scrollbar-styling mechanisms (`scrollbar-width`/`scrollbar-color` and `::-webkit-scrollbar`) and why both are needed together
+
 - [ ] Run the full Section 6 accessibility checklist against your own build, not just read it
 
 If every box is checked and your build passes the accessibility audit for real, Phase F1 is genuinely complete — not just "sessions attended," but the actual skill it was training.
 
 ---
+
 ---
 
 # Appendix — Tutorial QA Framework Validator Audit

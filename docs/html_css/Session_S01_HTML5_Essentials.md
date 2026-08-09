@@ -1,11 +1,12 @@
 # Session S01 — HTML5 Essentials
+
 ### Semantic Structure, Forms, ARIA & the Browser Rendering Pipeline
 
 **Syllabus position:** Phase F1 (HTML/CSS Foundations) · Day 1 of 37 · AgentStack Golden Canon v8 Slim
 **Prerequisites:** None. This is genuinely session zero.
 **Companion track:** The Odin Project → Foundations → *"Introduction to HTML and CSS"* lesson (run this session before or right alongside that lesson)
 **You already know:** Python, FastAPI. We will lean on that background as an anchor whenever it helps.
-**Time budget:** ~3 hours
+**Time budget:** \~3 hours
 
 ---
 
@@ -108,7 +109,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Structure**
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<html>` | The root element — everything lives inside it |
 | `<head>` | Invisible metadata: title, charset, linked stylesheets |
 | `<body>` | Everything the user actually sees |
@@ -118,7 +119,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Text content**
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<h1>`–`<h6>` | Headings, in strict order of importance |
 | `<p>` | A paragraph of body text |
 | `<strong>` | Text of strong importance (renders bold by default) |
@@ -129,7 +130,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Lists**
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<ul>` | Unordered (bulleted) list |
 | `<ol>` | Ordered (numbered) list |
 | `<li>` | One item inside a `<ul>` or `<ol>` |
@@ -138,7 +139,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Links and media**
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<a>` | A hyperlink — `href` says where it goes |
 | `<img>` | An image — `src` says where it comes from, `alt` describes it (self-closing) |
 | `<video>`, `<audio>` | Embedded video/audio players |
@@ -147,7 +148,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Forms** *(Section 8 covers these properly — this is just so the names are familiar first)*
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<form>` | Wraps a group of inputs meant to be submitted together |
 | `<input>` | A single-line field — its `type` attribute changes its behavior entirely |
 | `<textarea>` | A multi-line text field |
@@ -158,7 +159,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Tables**
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<table>` | The table itself |
 | `<tr>` | One table row |
 | `<td>` | One data cell |
@@ -167,7 +168,7 @@ Before the deep dives (Sections 5 through 8 will each take a small number of the
 **Semantic landmarks and misc** *(Section 6 covers the landmarks properly — again, names first)*
 
 | Tag | Purpose |
-|---|---|
+| --- | --- |
 | `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>` | Structural landmarks — Section 6 |
 | `<time>` | A machine-readable date/time, with a human-readable label |
 | `<code>` | A short inline snippet of code |
@@ -211,9 +212,9 @@ The **root element** — everything else in the document lives inside this one e
 
 Nothing inside `<head>` is directly displayed as page content. It's metadata — information *about* the page, not the page itself.
 
-- **`<meta charset="UTF-8">`** — tells the browser which character encoding to use when interpreting the raw bytes of the file into text. UTF-8 supports essentially every character in every human language (emoji included) and is the correct default for every page you will ever write. Omit this and, in rare cases, special characters (curly quotes, accented letters, the ₹ symbol) render as garbled boxes.
-- **`<meta name="viewport" content="width=device-width, initial-scale=1.0">`** — this single line is what makes a page render correctly on a phone instead of as a tiny zoomed-out desktop layout. `width=device-width` says "the page's width should match the actual screen width of the device," and `initial-scale=1.0` says "don't zoom in or out by default." You will not fully appreciate why this matters until Session S03 (responsive design), but it must be present from day one — mobile browsers assume you *forgot* it and apply bad defaults if it's missing.
-- **`<title>My First Page</title>`** — the text shown in the browser tab and in bookmarks. Also what search engines display as the clickable headline in search results.
+- `<meta charset="UTF-8">` — tells the browser which character encoding to use when interpreting the raw bytes of the file into text. UTF-8 supports essentially every character in every human language (emoji included) and is the correct default for every page you will ever write. Omit this and, in rare cases, special characters (curly quotes, accented letters, the ₹ symbol) render as garbled boxes.
+- `<meta name="viewport" content="width=device-width, initial-scale=1.0">` — this single line is what makes a page render correctly on a phone instead of as a tiny zoomed-out desktop layout. `width=device-width` says "the page's width should match the actual screen width of the device," and `initial-scale=1.0` says "don't zoom in or out by default." You will not fully appreciate why this matters until Session S03 (responsive design), but it must be present from day one — mobile browsers assume you *forgot* it and apply bad defaults if it's missing.
+- `<title>My First Page</title>` — the text shown in the browser tab and in bookmarks. Also what search engines display as the clickable headline in search results.
 
 ### `<body>` … everything the user actually sees
 
@@ -244,6 +245,7 @@ Before going further, you need the one tool that turns "guess and reload" into "
 The **Elements panel** shows your page's actual, live tag structure — not the text file you typed, but the browser's real-time understanding of it (this is your first informal look at the **DOM**, which Section 10 will explain properly). Click any tag in this panel and the corresponding part of the page highlights on screen; click any visible element on the page while an arrow-cursor "inspect" tool is active, and the panel jumps straight to that element's tag.
 
 Two things make this panel more than "a read-only view":
+
 - **You can edit live, temporarily.** Double-click any text content or attribute value in the Elements panel and change it — the page updates instantly. Reload the page and your edit disappears, because you only changed the browser's in-memory copy, not your actual file. This makes it the fastest way to *experiment*: "what if this button said something else?" — try it in DevTools first, then make the real edit in your file only once you know it looks right.
 - **The Styles pane, right next to it, shows every CSS rule affecting the selected element** — including which ones are being overridden and why (a preview of exactly the cascade mechanics you'll learn properly in Session S02). You don't need to understand this pane's contents yet; just know it's there, and that "inspect element, look at the Styles pane" will become one of your most common debugging habits starting next session.
 
@@ -255,7 +257,7 @@ The **Console** tab (next to Elements) is where JavaScript runs interactively �
 
 ### `data-*` attributes — custom attributes with a real, specific purpose
 
-You met the `href`, `alt`, `for`, and `required` attributes already — each one built into HTML with a browser-defined meaning. **`data-*` attributes are different: they're attributes *you* invent**, with a name and meaning entirely of your own choosing, that carry no special browser behavior at all. The only rule is the name must start with `data-`:
+You met the `href`, `alt`, `for`, and `required` attributes already — each one built into HTML with a browser-defined meaning. `data-*` **attributes are different: they're attributes *you* invent**, with a name and meaning entirely of your own choosing, that carry no special browser behavior at all. The only rule is the name must start with `data-`:
 
 ```html
 <button data-role="send" data-chat-id="conv-4471">Send</button>
@@ -301,7 +303,7 @@ Same visual result (a `<header>` has no special appearance by default — you st
 ### The landmark elements
 
 | Element | Role | One-line description |
-|---|---|---|
+| --- | --- | --- |
 | `<header>` | Introductory content | Logo, site title, top navigation — usually once per page (or once per `<article>`) |
 | `<nav>` | Navigation links | A block of links whose purpose is navigating the site |
 | `<main>` | Primary content | The one thing this page is "about." Exactly **one** per page, never nested inside another landmark |
@@ -326,7 +328,7 @@ Same visual result (a `<header>` has no special appearance by default — you st
 └─────────────────────────────────────────┘
 ```
 
-**`<section>` vs `<article>` vs generic `<div>` — the rule that actually matters:** Use `<section>` or `<article>` only when the content deserves its own heading and stands as a meaningful unit. If you're just grouping things for styling purposes with no semantic meaning of its own (a wrapper `<div>` purely to apply a CSS grid to its children, say), a plain `<div>` is *correct*, not a cop-out — `<div>` still has its place. The rule isn't "never use `<div>`," it's "don't use `<div>` where a more meaningful tag already exists for what you're describing."
+`<section>` **vs** `<article>` **vs generic** `<div>` **— the rule that actually matters:** Use `<section>` or `<article>` only when the content deserves its own heading and stands as a meaningful unit. If you're just grouping things for styling purposes with no semantic meaning of its own (a wrapper `<div>` purely to apply a CSS grid to its children, say), a plain `<div>` is *correct*, not a cop-out — `<div>` still has its place. The rule isn't "never use `<div>`," it's "don't use `<div>` where a more meaningful tag already exists for what you're describing."
 
 ### Heading hierarchy — `<h1>` through `<h6>`
 
@@ -358,7 +360,7 @@ Headings create the outline of your document, the same way Markdown headers (`#`
 <img src="/images/avatar.png" alt="Soutrik's profile picture">
 ```
 
-**`alt` on `<img>` is not optional.** It's the text a screen reader announces in place of the image, and it's also what displays if the image fails to load. Two rules: if the image conveys information, describe that information (`alt="Bar chart showing 40% increase in Q3 revenue"`, not `alt="chart.png"` and definitely not a missing `alt` attribute — a missing `alt` is often read aloud by screen readers as the raw filename, which is actively worse than no image at all). If the image is purely decorative (a background flourish, a spacer), use an **empty** `alt=""` — this explicitly tells assistive tech "skip this, it's decorative," which is different from forgetting the attribute entirely.
+`alt` **on** `<img>` **is not optional.** It's the text a screen reader announces in place of the image, and it's also what displays if the image fails to load. Two rules: if the image conveys information, describe that information (`alt="Bar chart showing 40% increase in Q3 revenue"`, not `alt="chart.png"` and definitely not a missing `alt` attribute — a missing `alt` is often read aloud by screen readers as the raw filename, which is actively worse than no image at all). If the image is purely decorative (a background flourish, a spacer), use an **empty** `alt=""` — this explicitly tells assistive tech "skip this, it's decorative," which is different from forgetting the attribute entirely.
 
 ### Lists
 
@@ -383,6 +385,7 @@ This deserves its own subsection because it's the mistake almost every beginner 
 You might think: "I want a clickable thing that looks a certain way — I'll just add a click behavior to a `<div>` and style it to look like a button." **Don't.** Here's precisely why.
 
 A native `<button>` element comes with an enormous amount of behavior *built into the browser*, for free, that you would otherwise have to reimplement by hand:
+
 - It is automatically reachable by pressing `Tab` (keyboard-focusable).
 - Pressing `Enter` or `Space` while it's focused activates it, automatically.
 - Screen readers announce it as `"button"`, so a blind user knows it's interactive without you writing a single line of extra code.
@@ -400,7 +403,7 @@ A `<div>` has **none of this**. A `<div>` with a click handler is invisible to a
 
 You'll build the BIA chat UI's send button, stop button, and every dropdown trigger as real `<button>` elements for exactly this reason — it is a hard requirement of this syllabus's accessibility standard, not a nice-to-have.
 
-**The one gotcha inside the gotcha — `type="button"`.** Any `<button>` placed inside an HTML `<form>` (Section 8, next) defaults to `type="submit"` if you don't say otherwise — meaning clicking it submits the entire form and reloads the page, which is almost never what you want for something like a "stop generating" button sitting next to a text input. Always write `type="button"` explicitly unless you specifically want submit behavior. This single missing attribute is the most common cause of "why did my page reload when I clicked that button?!" bugs in every beginner's first form.
+**The one gotcha inside the gotcha —** `type="button"`**.** Any `<button>` placed inside an HTML `<form>` (Section 8, next) defaults to `type="submit"` if you don't say otherwise — meaning clicking it submits the entire form and reloads the page, which is almost never what you want for something like a "stop generating" button sitting next to a text input. Always write `type="button"` explicitly unless you specifically want submit behavior. This single missing attribute is the most common cause of "why did my page reload when I clicked that button?!" bugs in every beginner's first form.
 
 > **Mini-exercise (4 min):** Add a `<button type="button">Click Me</button>` to your practice page. Load the page, then — without touching your mouse — press `Tab` repeatedly until you see a focus outline appear around the button, then press `Enter`. Confirm you can "activate" it purely from the keyboard. (It won't *do* anything yet since we have no JavaScript — you're just confirming the focus/keyboard behavior exists automatically.)
 
@@ -420,9 +423,9 @@ Forms are how a page collects information from a user — a login screen, a sear
 </form>
 ```
 
-- **`<form>`** wraps the whole thing and, if given an `action` and `method` attribute (we won't need these yet — later sessions handle real submission via JavaScript instead), defines where and how the data goes when submitted.
-- **`<input>`** is the actual field the user types into. It's self-closing, like `<img>`.
-- **`<label>`** is text describing what the input is for — and it is *not* just a visual caption. The `for="message-input"` attribute must exactly match the input's `id="message-input"` — this creates a programmatic link between them. Two enormous, free benefits fall out of this one connection: clicking the *label text* (not just the tiny input box itself) focuses the input — try it, it works even with zero CSS or JavaScript — and a screen reader announces the label text when the input receives focus, so a blind user knows what they're being asked to type *before* they start typing.
+- `<form>` wraps the whole thing and, if given an `action` and `method` attribute (we won't need these yet — later sessions handle real submission via JavaScript instead), defines where and how the data goes when submitted.
+- `<input>` is the actual field the user types into. It's self-closing, like `<img>`.
+- `<label>` is text describing what the input is for — and it is *not* just a visual caption. The `for="message-input"` attribute must exactly match the input's `id="message-input"` — this creates a programmatic link between them. Two enormous, free benefits fall out of this one connection: clicking the *label text* (not just the tiny input box itself) focuses the input — try it, it works even with zero CSS or JavaScript — and a screen reader announces the label text when the input receives focus, so a blind user knows what they're being asked to type *before* they start typing.
 
 ```html
 <!-- WRONG: no programmatic connection, screen reader announces nothing useful -->
@@ -518,7 +521,7 @@ Normally, a screen reader only reads a page's content when the user actively nav
 You will write exactly this attribute, on exactly this kind of element, in this session's capstone exercise below — and again for real, wired up to actual streaming text, in Session S26 (Streaming UX) many weeks from now. This is a good example of what "connected organically," across the syllabus, actually looks like: one small attribute learned today, in a static HTML file with no JavaScript at all, becomes load-bearing infrastructure in a production streaming chat interface a month later.
 
 | Attribute | Use for | Never use on |
-|---|---|---|
+| --- | --- | --- |
 | `aria-label` | Naming an element with no visible text | An element that already has visible label text (creates a mismatch) |
 | `aria-hidden="true"` | Hiding purely decorative content from assistive tech | Anything focusable (buttons, links, inputs) |
 | `aria-live="polite"` | Announcing dynamically-updating content (chat messages, toast notifications) | Static content that never changes after load |
@@ -645,12 +648,13 @@ You now have every individual ingredient this session's official exercise (per t
 ```
 
 Notice everything at work simultaneously here, all from this single session:
+
 - **Landmarks** (`<header>`, `<nav>`, `<main>`, `<footer>`) give the page a jumpable structure.
 - **Heading hierarchy** (`<h1>` once, `<h2>` twice, correctly nested, never skipping a level).
-- **`<button type="button">`** for every non-submitting action (sidebar toggle, history items, Stop) — with `type="submit"` reserved for the one button that should actually submit the form (Send).
-- **`aria-label`** on the two icon-only buttons that have no visible text label.
-- **`<label for>`** correctly paired with the `<textarea>`'s `id`.
-- **`aria-live="polite"`** on the message list — this exact `id="message-list"` div is the one that, in Session S26, will receive real streamed tokens from your Express BFF, and this attribute is what will make that streaming accessible to a screen reader from day one, because you set it up correctly *now*, before there was even anything dynamic happening yet.
+- `<button type="button">` for every non-submitting action (sidebar toggle, history items, Stop) — with `type="submit"` reserved for the one button that should actually submit the form (Send).
+- `aria-label` on the two icon-only buttons that have no visible text label.
+- `<label for>` correctly paired with the `<textarea>`'s `id`.
+- `aria-live="polite"` on the message list — this exact `id="message-list"` div is the one that, in Session S26, will receive real streamed tokens from your Express BFF, and this attribute is what will make that streaming accessible to a screen reader from day one, because you set it up correctly *now*, before there was even anything dynamic happening yet.
 
 > **Do this now:** type the above into `chat-shell.html`, open it in your browser, and Tab through every interactive element start to finish, confirming each one gets a visible focus outline and that the History and Stop buttons — despite having no visible "type" difference to you as the developer — behave correctly (Stop never triggers a page reload; Send, if you had a real backend, would).
 
@@ -697,6 +701,7 @@ Starting from Section 11's `chat-shell.html`, add: a second `<nav>`-adjacent reg
 ### Pitfall 1 — Missing `alt` text (not empty — genuinely missing)
 
 **WRONG (what beginners actually write):**
+
 ```html
 <img src="/avatar.png">
 ```
@@ -706,6 +711,7 @@ Starting from Section 11's `chat-shell.html`, add: a second `<nav>`-adjacent reg
 **WHY:** The `alt` attribute is how a browser communicates an image's content to anyone who cannot see it. With no `alt` attribute at all (as opposed to an intentional `alt=""`), the browser and assistive tech have no way to distinguish "this is decorative, safely ignore it" from "the developer simply forgot" — so most screen readers fall back to announcing the filename, which is actively worse than saying nothing.
 
 **FIX:**
+
 ```html
 <!-- Meaningful image: describe the content -->
 <img src="/avatar.png" alt="Soutrik's profile picture">
@@ -717,6 +723,7 @@ Starting from Section 11's `chat-shell.html`, add: a second `<nav>`-adjacent reg
 ### Pitfall 2 — `<button>` inside a `<form>` without `type="button"`
 
 **WRONG:**
+
 ```html
 <form>
   <textarea name="message"></textarea>
@@ -729,6 +736,7 @@ Starting from Section 11's `chat-shell.html`, add: a second `<nav>`-adjacent reg
 **WHY:** Any `<button>` with no explicit `type` attribute, placed inside a `<form>`, defaults to `type="submit"` per the HTML specification. This is the browser's default assumption, not a bug — but it silently ambushes almost every beginner the first time they put a non-submit button inside a form (which is extremely common, since a chat input's Send button and Stop button naturally live in the same form together).
 
 **FIX:**
+
 ```html
 <form>
   <textarea name="message"></textarea>
@@ -770,10 +778,11 @@ You told me you're running The Odin Project's Foundations course in parallel, HT
 **What Odin's foundational HTML lesson covers:** a basic overview of HTML and CSS working together, core elements and tags, and a note that it will return to forms, tables, and — explicitly, in Odin's own words — "animations, accessibility, and responsive design later in the curriculum, in the Advanced HTML and CSS course." Odin's own introduction lesson is deliberately light at this stage; it is designed as a first taste, not full coverage.
 
 **What this session covers that Odin's foundational lesson explicitly defers:**
+
 - **Full ARIA fundamentals** (Section 9) — Odin pushes this entirely into a later "Advanced" course; you're getting it now, Session 1, because your syllabus's capstone (a production LLM chat UI) needs accessible streaming regions from the very first week, not months from now.
 - **The full five-stage browser rendering pipeline** (Section 10) — this level of "under the hood" technical depth isn't part of Odin's Foundations track at all; it's the kind of thing you'd otherwise pick up piecemeal, much later, from separate performance-focused reading.
 - **Forms with native validation** (Section 8) in this much depth — Odin's Foundations course mentions forms only in passing, with the real forms lesson living in a separate, later course.
-- **The `button` vs `div` accessibility gotcha** (Section 7) as an explicit, named pitfall with a WRONG/SYMPTOM/WHY/FIX breakdown, rather than an implicit convention picked up by osmosis from reading other people's code.
+- **The** `button` **vs** `div` **accessibility gotcha** (Section 7) as an explicit, named pitfall with a WRONG/SYMPTOM/WHY/FIX breakdown, rather than an implicit convention picked up by osmosis from reading other people's code.
 
 **What to use Odin for, alongside this:** Odin's strength is breadth of practice repetitions and its curated links to outside resources for each small sub-concept — if a particular idea in this session (say, the box model, which is actually next session's territory) doesn't click from my explanation alone, Odin's version of the same concept, explained by a different author in different words, is often exactly the second explanation that makes it click. Treat the two as complementary passes over overlapping ground, not a redundant duplicate — this document is intentionally built to be a **superset** of Odin's introductory HTML lesson, not a replacement for the practice reps and community support Odin also provides.
 
@@ -790,19 +799,29 @@ Everything you built today is structurally complete and semantically correct —
 Before moving to Session S02, confirm you can do every one of these without looking back at the document:
 
 - [ ] Explain, in one sentence, what HTML is and what it is *not* (a markup language describing structure, not a programming language)
+
 - [ ] Write a complete, correct document skeleton from memory (`<!DOCTYPE html>` through the closing `</html>`)
+
 - [ ] Name all seven landmark elements and what each is for
+
 - [ ] Explain why `<div class="header">` is worse than `<header>`, in accessibility terms specifically, not just "it's a best practice"
+
 - [ ] Explain why a clickable `<div>` is broken for keyboard and screen-reader users, and what `<button>` gives you for free instead
+
 - [ ] Correctly pair a `<label for>` with an input's `id`
+
 - [ ] State the "first rule of ARIA" from memory
+
 - [ ] Explain what `aria-live="polite"` is for, and why it matters specifically for a streaming chat UI
+
 - [ ] Name the five stages of the browser rendering pipeline, in order
+
 - [ ] Build the full semantic chat-UI shell from Section 11 without copying it
 
 If any box is unchecked, re-read that section before starting Session S02 — everything in this syllabus is cumulative, and gaps here compound.
 
 ---
+
 ---
 
 # Appendix — Tutorial QA Framework Validator Audit (Revision 2)
@@ -947,7 +966,7 @@ FIX:     Before finalizing any session, mechanically grep that session's own
 
 *Triggered by direct, explicit feedback that this syllabus was moving into specific topics (forms, ARIA, rendering internals) without first giving a fast, broad map of the ordinary tags a real HTML file is built from. This is a legitimate, structural gap, distinct from Revision 2's DevTools/data-* completeness gap — that one was "a promised topic never delivered"; this one is "a reasonable expectation about *sequencing* that was never stated as a requirement until now."
 
-**Finding:** Sections 5 through 9 (ARIA, forms, semantic elements, etc.) each individually introduced the tags relevant to that section, but no single place gave a fast, low-depth survey of the ~30 tags a learner will see constantly, before the deep dives began. For someone starting from genuine zero, encountering an unfamiliar tag name *and* a new mechanism in the same sentence, repeatedly, is a heavier cognitive load than separating "here is the name" from "here is why it matters," done in two passes.
+**Finding:** Sections 5 through 9 (ARIA, forms, semantic elements, etc.) each individually introduced the tags relevant to that section, but no single place gave a fast, low-depth survey of the \~30 tags a learner will see constantly, before the deep dives began. For someone starting from genuine zero, encountering an unfamiliar tag name *and* a new mechanism in the same sentence, repeatedly, is a heavier cognitive load than separating "here is the name" from "here is why it matters," done in two passes.
 
 **Fix applied:** a new Section 3, "Common HTML Tags — The Fast-Reference Survey," was inserted immediately after Section 2 (Core Concept) and before Section 4 (Document Skeleton) — deliberately shallow, a name and one-line purpose per tag, organized by category, explicitly framed as "skim once, return to as needed" rather than something to memorize. Every subsequent section (5 through 18) was renumbered by +1 to accommodate it, and every internal cross-reference in the document body was re-derived from the new header map and mechanically re-verified — not by re-reading the prose, but by extracting the actual current header text for every "Section N" mention in the body and confirming each number points at the content it claims to, printed out and checked line by line (see the verification method note below).
 

@@ -1,11 +1,12 @@
 # Session S03 — CSS Layout
+
 ### Flexbox, Grid, Positioning, Responsive Design & Modern CSS
 
 **Syllabus position:** Phase F1 (HTML/CSS Foundations) · Day 3 of 37 · AgentStack Golden Canon v8 Slim
 **Prerequisites:** Sessions S01 (HTML5 Essentials), S02 (CSS Fundamentals)
 **Companion track:** The Odin Project → Foundations → Flexbox lessons
 **Standing objective:** same as every session — teach for genuine understanding, not copy-paste. This session has more "predict before you peek" moments than any session so far, because layout is the topic where guessing-and-checking is most tempting and least durable as a skill.
-**Time budget:** ~3 hours (this is a dense session — six topics. Split across two sittings if that serves you better than one long one.)
+**Time budget:** \~3 hours (this is a dense session — six topics. Split across two sittings if that serves you better than one long one.)
 
 ---
 
@@ -88,13 +89,13 @@ flex-direction: column
 `justify-content` controls how leftover space (space beyond what the items themselves need) gets distributed *along the main axis*. This is confirmed directly by MDN: on the main axis, Flexbox treats all the items as one group, and `justify-content` decides what happens with whatever space is left over after they're laid out.
 
 | Value | What it does |
-|---|---|
+| --- | --- |
 | `flex-start` (default) | Items packed at the start, leftover space at the end |
 | `center` | Items packed together, centered, leftover space split evenly on both ends |
 | `space-between` | First item at the very start, last item at the very end, remaining space split evenly *between* items |
 | `space-around` | Equal space around every item (so edge items get half as much visible gap as items get between each other) |
 
-**Predict before you peek:** a chat header needs a logo on the left and a settings icon on the right, with nothing in between. Which `justify-content` value do you reach for? *(`space-between` — exactly two items, pushed to opposite ends, with the "between" space absorbing everything in the middle. This is the header layout you'll build in the capstone below.)*
+**Predict before you peek:** a chat header needs a logo on the left and a settings icon on the right, with nothing in between. Which `justify-content` value do you reach for? *(*`space-between` *— exactly two items, pushed to opposite ends, with the "between" space absorbing everything in the middle. This is the header layout you'll build in the capstone below.)*
 
 ### `align-items` — arranging items along the cross axis
 
@@ -107,7 +108,7 @@ flex-direction: column
 
 `align-items` does the same job as `justify-content`, but for the **cross axis** instead of the main axis. Its default value is `stretch` — confirmed by MDN — which is *why*, if you've ever built a flex row and noticed all the items mysteriously became the same height as the tallest one without you asking for that, this is why: `stretch` is the default, not an accident. `align-items: center` vertically centers items in a row (or horizontally centers them in a column) — this is the real, general-purpose centering tool Session S02 told you `margin: auto` could only partially offer.
 
-**Explain it back to yourself:** in a `flex-direction: row` container, is `align-items: center` a horizontal centering property or a vertical one? *(Vertical — because in a row, the main axis is horizontal, which means the cross axis — the one `align-items` controls — is vertical. Flip to `flex-direction: column` and this reverses: `align-items` now centers horizontally.)*
+**Explain it back to yourself:** in a `flex-direction: row` container, is `align-items: center` a horizontal centering property or a vertical one? *(Vertical — because in a row, the main axis is horizontal, which means the cross axis — the one* `align-items` *controls — is vertical. Flip to* `flex-direction: column` *and this reverses:* `align-items` *now centers horizontally.)*
 
 ### `gap`, `flex-grow`, and `flex-shrink` — spacing and sizing
 
@@ -162,9 +163,9 @@ grid-template-rows: auto 1fr auto
 
 `grid-template-columns: 260px 1fr` declares exactly two columns: a fixed 260px sidebar, and a second column that takes "1 fraction" (`fr`) of whatever space remains — which, with only one `fr` column, means "everything else." `grid-template-rows: auto 1fr auto` does the same for rows: header sized to its content (`auto`), message area filling all remaining vertical space (`1fr`), input bar sized to its content (`auto`). This single, four-line CSS rule is the entire structural skeleton of the BIA chat UI's outer shell.
 
-**The `fr` unit, explained properly, not just used.** `fr` stands for "fraction" — it's a unit that only exists inside Grid, and it means "one share of the space left over after every fixed-size (`px`, `%`, `auto`) track has taken what it needs." `grid-template-columns: 1fr 2fr` splits remaining space into three shares total, giving the second column twice as much as the first — not because `2fr` is "bigger" in isolation, but because it claims twice the *proportion* of whatever's left.
+**The** `fr` **unit, explained properly, not just used.** `fr` stands for "fraction" — it's a unit that only exists inside Grid, and it means "one share of the space left over after every fixed-size (`px`, `%`, `auto`) track has taken what it needs." `grid-template-columns: 1fr 2fr` splits remaining space into three shares total, giving the second column twice as much as the first — not because `2fr` is "bigger" in isolation, but because it claims twice the *proportion* of whatever's left.
 
-**Predict before you peek:** if you wrote `grid-template-columns: 100px 1fr 1fr` in a 900px-wide container, how wide would each of the two `1fr` columns actually be? *(100px is claimed by the fixed column first, leaving 800px. That 800px splits into two equal `1fr` shares, so each `1fr` column is 400px. This is why `fr` calculations always start by subtracting fixed-size tracks first — `fr` only ever divides what's genuinely left over.)*
+**Predict before you peek:** if you wrote `grid-template-columns: 100px 1fr 1fr` in a 900px-wide container, how wide would each of the two `1fr` columns actually be? *(100px is claimed by the fixed column first, leaving 800px. That 800px splits into two equal* `1fr` *shares, so each* `1fr` *column is 400px. This is why* `fr` *calculations always start by subtracting fixed-size tracks first —* `fr` *only ever divides what's genuinely left over.)*
 
 ### Where Grid ends and Flexbox begins, inside the same layout
 
@@ -195,13 +196,13 @@ Notice `.message-list` — the middle grid cell — is *itself* a flex container
 Every element has a `position` value, and the default — `static` — is just normal flow with no special positioning behavior at all (this is what everything you've built in S01 and S02 has been using, without you needing to name it until now). Four other values opt an element *out* of static positioning:
 
 | Value | Positioned relative to | Common use |
-|---|---|---|
+| --- | --- | --- |
 | `relative` | Its own normal-flow position (nudges it from there) | Establishing a positioning anchor for an absolutely-positioned child |
 | `absolute` | Its nearest ancestor that is *not* `static` | Dropdowns, tooltips, badges |
 | `fixed` | The browser viewport, ignoring scroll | Modals, floating action buttons |
 | `sticky` | Normal flow, until a scroll threshold, then the nearest scrolling ancestor | Sticky headers, sticky input bars |
 
-**`position: absolute`, properly explained — paying off Session S02's promise.** An absolutely positioned element is removed entirely from normal flow (other elements act as if it isn't there, exactly like `display: none` from Session S02 — except it's still visible, just not occupying flow space) and is positioned using `top`/`right`/`bottom`/`left` relative to its **nearest positioned ancestor** — the nearest ancestor whose `position` is anything other than the default `static`. This is precisely the mechanism S02 promised: instead of toggling a dropdown's `display` between `none` and `block` (which Section 3 of S02 showed causes every element below it to visually jump as the box enters or leaves the render tree), you keep the dropdown permanently in the DOM, positioned absolutely so it never occupies flow space in the first place, and toggle only its `visibility` or `opacity` — nothing around it ever needs to shift, because as far as layout is concerned, an absolutely positioned element was never really "in the way" to begin with.
+`position: absolute`**, properly explained — paying off Session S02's promise.** An absolutely positioned element is removed entirely from normal flow (other elements act as if it isn't there, exactly like `display: none` from Session S02 — except it's still visible, just not occupying flow space) and is positioned using `top`/`right`/`bottom`/`left` relative to its **nearest positioned ancestor** — the nearest ancestor whose `position` is anything other than the default `static`. This is precisely the mechanism S02 promised: instead of toggling a dropdown's `display` between `none` and `block` (which Section 3 of S02 showed causes every element below it to visually jump as the box enters or leaves the render tree), you keep the dropdown permanently in the DOM, positioned absolutely so it never occupies flow space in the first place, and toggle only its `visibility` or `opacity` — nothing around it ever needs to shift, because as far as layout is concerned, an absolutely positioned element was never really "in the way" to begin with.
 
 ```css
 .dropdown-trigger {
@@ -242,7 +243,7 @@ Both S01 and S02 deferred this exact comparison here, specifically because it's 
 .b { visibility: hidden; }  /* Invisible, but the box's space is STILL RESERVED */
 ```
 
-**Predict before you peek:** you have three stacked boxes, A, B, C. If you set `display: none` on B, do A and C end up touching each other, or does a B-sized gap remain between them? What if you set `visibility: hidden` on B instead? *(With `display: none`: A and C touch directly — B's box doesn't exist for layout purposes, exactly as Session S02 explained. With `visibility: hidden`: a B-sized empty gap remains between A and C — the box is still fully present and reserving its space, just not painted. This is the entire distinction, and it's why `visibility: hidden` is the right tool when you want to hide something *without* triggering a layout shift for its neighbors, while `display: none` is right when you want the space reclaimed entirely.)*
+**Predict before you peek:** you have three stacked boxes, A, B, C. If you set `display: none` on B, do A and C end up touching each other, or does a B-sized gap remain between them? What if you set `visibility: hidden` on B instead? *(With* `display: none`*: A and C touch directly — B's box doesn't exist for layout purposes, exactly as Session S02 explained. With* `visibility: hidden`*: a B-sized empty gap remains between A and C — the box is still fully present and reserving its space, just not painted. This is the entire distinction, and it's why* `visibility: hidden` *is the right tool when you want to hide something without triggering a layout shift for its neighbors, while* `display: none` *is right when you want the space reclaimed entirely.)*
 
 ### `z-index` — who's on top, and the one prerequisite people miss
 
@@ -253,7 +254,7 @@ Both S01 and S02 deferred this exact comparison here, specifically because it's 
 }
 ```
 
-**`z-index` only has any effect on elements that are positioned** (anything other than `static`) — this trips up nearly every beginner at least once: setting `z-index: 999` on a `position: static` element (the default) does absolutely nothing, silently, with no error or warning. If a `z-index` value "isn't working," the very first thing to check is whether the element even has a non-static `position` set at all.
+`z-index` **only has any effect on elements that are positioned** (anything other than `static`) — this trips up nearly every beginner at least once: setting `z-index: 999` on a `position: static` element (the default) does absolutely nothing, silently, with no error or warning. If a `z-index` value "isn't working," the very first thing to check is whether the element even has a non-static `position` set at all.
 
 > **Do this now:** build a small card with a `position: relative` container and a `position: absolute` badge in its top-right corner (`top: -8px; right: -8px;`), confirming the badge overlaps the card's edge rather than being confined inside it — this is the real dropdown/tooltip/badge mechanism, in miniature.
 
@@ -279,12 +280,12 @@ Both S01 and S02 deferred this exact comparison here, specifically because it's 
 }
 ```
 
-**Predict before you peek:** in the CSS above, is the sidebar visible on a phone, or on a desktop monitor? *(Hidden on phone — `display: none` is the unconditional base rule. It only becomes `display: flex` once the viewport is at least 768px wide, which a phone screen isn't. This is mobile-first exactly: assume the smallest case by default, add capability as room becomes available — never the reverse.)*
+**Predict before you peek:** in the CSS above, is the sidebar visible on a phone, or on a desktop monitor? *(Hidden on phone —* `display: none` *is the unconditional base rule. It only becomes* `display: flex` *once the viewport is at least 768px wide, which a phone screen isn't. This is mobile-first exactly: assume the smallest case by default, add capability as room becomes available — never the reverse.)*
 
 ### Standard breakpoints, and touch target sizing
 
 | Breakpoint name | Width | Typical device |
-|---|---|---|
+| --- | --- | --- |
 | `sm` | 640px | Large phone, small tablet |
 | `md` | 768px | Tablet |
 | `lg` | 1024px | Small laptop / desktop |
@@ -502,9 +503,9 @@ Notice this file is the direct, working answer to this session's stated gotcha: 
 
 **Every major chat and productivity application's shell — Slack, Discord, and the production BIA UI itself — uses exactly this Grid-outer/Flexbox-inner composition pattern**, not because it's the only way to build it, but because it maps directly onto the actual dimensionality of each sub-problem: the overall app frame is a genuine two-dimensional layout (Grid), while the message list, the header row, and the input row are each genuinely one-dimensional arrangements (Flexbox) — using the tool that matches the problem, rather than reaching for the more powerful tool everywhere out of habit.
 
-**The `overflow`/`position: sticky` interaction is one of the most-reported CSS layout bugs in production codebases**, well-documented across multiple independent sources (MDN's own position reference, and numerous engineering blog postmortems on "why won't my sticky header stick") — precisely because `overflow: hidden` is *also* commonly added, elsewhere, for a completely unrelated reason (clipping an image, preventing text overflow), and the two features silently interact the moment they share an ancestor-descendant relationship, with no error message anywhere pointing at the actual cause.
+**The** `overflow`**/**`position: sticky` **interaction is one of the most-reported CSS layout bugs in production codebases**, well-documented across multiple independent sources (MDN's own position reference, and numerous engineering blog postmortems on "why won't my sticky header stick") — precisely because `overflow: hidden` is *also* commonly added, elsewhere, for a completely unrelated reason (clipping an image, preventing text overflow), and the two features silently interact the moment they share an ancestor-descendant relationship, with no error message anywhere pointing at the actual cause.
 
-**`prefers-reduced-motion` is a documented legal and ethical accessibility requirement** in modern web development, directly tied to WCAG's guidance on motion and animation — for a company operating under the kind of regulatory scrutiny this syllabus's BIA platform does, skipping this media query isn't a stylistic oversight, it's a compliance gap.
+`prefers-reduced-motion` **is a documented legal and ethical accessibility requirement** in modern web development, directly tied to WCAG's guidance on motion and animation — for a company operating under the kind of regulatory scrutiny this syllabus's BIA platform does, skipping this media query isn't a stylistic oversight, it's a compliance gap.
 
 ---
 
@@ -521,6 +522,7 @@ Build a navigation bar: a flex container with three children — a logo (fixed w
 ### Exercise 2 (Medium) — Diagnose and Fix a Broken Sticky Header
 
 Given this CSS, a colleague says "my header has `position: sticky; top: 0;` but it just scrolls away with everything else instead of sticking":
+
 ```css
 .page-wrapper {
   overflow-x: hidden;
@@ -530,6 +532,7 @@ Given this CSS, a colleague says "my header has `position: sticky; top: 0;` but 
   top: 0;
 }
 ```
+
 Diagnose the cause without a browser, referencing the exact mechanism from Section 4, and state the one-line fix.
 
 **Success criteria:** your diagnosis correctly identifies that `overflow-x: hidden` on `.page-wrapper` creates a new scrolling context that becomes `.header`'s nearest scrolling ancestor instead of the viewport, and that (per this session's own confirmed research) setting `overflow-x` on an element implicitly forces `overflow-y: auto` on the same element too — so the fix is not simply deleting the property (which may have had a legitimate reason to exist) but replacing it with `overflow-x: clip` (which disables horizontal scrolling without creating this side effect) or restructuring so `.header` and whatever needed `overflow-x: hidden` don't share that ancestor relationship.
@@ -547,6 +550,7 @@ Build a dropdown menu: a trigger button and a menu that is absolutely positioned
 ### Pitfall 1 — `overflow: hidden` on an ancestor silently breaking `position: sticky`
 
 **WRONG:**
+
 ```css
 .chat-column {
   overflow: hidden;  /* added to prevent an unrelated image from overflowing */
@@ -562,17 +566,20 @@ Build a dropdown menu: a trigger button and a menu that is absolutely positioned
 **WHY:** `overflow: hidden` (or `scroll`, or `auto`) on any ancestor creates a "scrolling mechanism" for that ancestor, per CSS's own specification — and a sticky element sticks to its *nearest ancestor with a scrolling mechanism*, not necessarily the actual scrolling container (commonly the viewport). Once `.chat-column` has `overflow: hidden`, it becomes `.chat-header`'s sticky reference point instead of the page's real scroll container — and if `.chat-column` itself never scrolls (because its content fits, or because the real scrolling happens somewhere else), the sticky threshold is never crossed and the header just behaves as if it were `position: static`.
 
 **FIX:**
+
 ```css
 .chat-column {
   overflow-x: hidden;   /* clip only the horizontal axis, if that was the actual goal */
   overflow-y: visible;  /* explicitly restore vertical, so the true scrolling ancestor stays the viewport */
 }
 ```
+
 Or, if you genuinely need to clip both axes on that ancestor for an unrelated reason, restructure so the sticky element and the `overflow: hidden` element don't share that ancestor relationship at all — sticky's reference point is determined structurally, not by intent, so the fix is almost always architectural, not a single property tweak.
 
 ### Pitfall 2 — `z-index` set on a `position: static` element
 
 **WRONG:**
+
 ```css
 .dropdown-menu {
   z-index: 999;  /* position is still the default: static */
@@ -584,6 +591,7 @@ Or, if you genuinely need to clip both axes on that ancestor for an unrelated re
 **WHY:** `z-index` only takes effect on positioned elements — anything other than the default `position: static`. On a static element, `z-index` is simply ignored by the browser, silently, with no warning.
 
 **FIX:**
+
 ```css
 .dropdown-menu {
   position: absolute;  /* now a positioned element — z-index actually applies */
@@ -603,11 +611,11 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Basic_c
 The single most-referenced free layout guide in the industry — Session S02 told you to bookmark this; now is when to actually read it in full, as a second explanation alongside this session's.
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
-**MDN — `position`**
+**MDN —** `position`
 The authoritative reference for Section 4, including the exact "nearest ancestor with a scrolling mechanism" wording this session's central gotcha is built from.
 https://developer.mozilla.org/en-US/docs/Web/CSS/position
 
-**MDN — `prefers-reduced-motion`**
+**MDN —** `prefers-reduced-motion`
 The official specification reference for Section 7's accessibility requirement.
 https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
 
@@ -622,10 +630,11 @@ https://www.theodinproject.com/lessons/node-path-foundations-flexbox-basics
 Odin's Foundations course has a dedicated multi-lesson Flexbox unit — genuinely strong, project-heavy, and a good source of additional practice repetitions beyond Exercise 1 above. Here's the honest delta between what Odin covers at this stage and what this session adds:
 
 **What this session covers that Odin's Flexbox unit doesn't reach:**
+
 - **CSS Grid** — Odin's curriculum covers Grid in a separate, later course, not alongside Flexbox; this session teaches both together, specifically because the app-shell pattern in Section 8 needs both simultaneously, and understanding *when* to reach for each is only possible once you've seen them side by side.
 - **The full positioning scheme** (Section 4), including the `position: sticky` scrolling-ancestor mechanism — Odin's Foundations track mentions positioning only briefly; the depth here, including the worked `overflow`/`sticky` interaction, goes well past an introductory treatment.
-- **`prefers-reduced-motion`** (Section 7) — accessibility-for-motion isn't part of Odin's Foundations-level material at all.
-- **`@layer` and `:has()`** (Section 6) — genuinely newer CSS features most Foundations-level curricula, Odin included, haven't yet incorporated into their early lessons.
+- `prefers-reduced-motion` (Section 7) — accessibility-for-motion isn't part of Odin's Foundations-level material at all.
+- `@layer` **and** `:has()` (Section 6) — genuinely newer CSS features most Foundations-level curricula, Odin included, haven't yet incorporated into their early lessons.
 
 **What to use Odin for, alongside this:** more Flexbox practice repetitions with different project framing, and its curated external links for any Flexbox sub-concept that needs a second explanation in different words — the complementary-not-redundant relationship established in Sessions S01 and S02 continues here.
 
@@ -640,19 +649,29 @@ You now have every layout tool the syllabus's Foundation Project needs: semantic
 ## 15. Key Takeaways Checklist
 
 - [ ] Explain what "normal flow" is, and state in one sentence why Flexbox and Grid both exist as alternatives to it
+
 - [ ] Draw the main-axis/cross-axis diagram from memory, for both `flex-direction: row` and `flex-direction: column`
+
 - [ ] Explain why `align-items: center` centers vertically in a row but horizontally in a column
+
 - [ ] State what the `fr` unit means, and correctly compute a three-column `100px 1fr 1fr` split for a given container width
+
 - [ ] Explain, from memory, why `position: absolute` is the correct alternative to toggling `display` for a dropdown, referencing what "removed from flow but still visible" actually means
+
 - [ ] State the full `visibility: hidden` vs `display: none` distinction without looking back
+
 - [ ] Explain why `z-index` sometimes silently does nothing, and what the fix always is
+
 - [ ] Explain, precisely, why `overflow: hidden` on an ancestor can break a descendant's `position: sticky`
+
 - [ ] State the GPU-performance rule for CSS transitions (only `transform` and `opacity`) and why it exists, tying back to Session S01's rendering pipeline
+
 - [ ] Explain what `prefers-reduced-motion` detects and why the blanket near-zero-duration override pattern is the standard response to it
 
 If any box is unchecked, re-read that section — ideally out loud — before Session S04, which assumes every one of these is solid enough to build on without re-explanation.
 
 ---
+
 ---
 
 # Appendix — Tutorial QA Framework Validator Audit

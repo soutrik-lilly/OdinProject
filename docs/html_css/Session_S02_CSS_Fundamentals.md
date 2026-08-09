@@ -1,17 +1,18 @@
 # Session S02 — CSS Fundamentals
+
 ### The Cascade, Specificity, the Box Model, Units & CSS Custom Properties
 
 **Syllabus position:** Phase F1 (HTML/CSS Foundations) · Day 2 of 37 · AgentStack Golden Canon v8 Slim
 **Prerequisites:** Session S01 (HTML5 Essentials)
 **Companion track:** The Odin Project → Foundations → CSS lessons (run alongside or just after this session)
 **Standing objective, restated so it governs everything below:** I am not writing this so you have code to copy. I am writing this so that six months from now, with no AI open in another tab, you can look at a CSS problem, reason about *why* it's behaving the way it is, and fix it — because you actually built the mental model, not because you memorized a snippet that matched. Everywhere it helps, I will ask you to predict an outcome *before* I tell you the answer. Do that honestly, even when you're not sure — being wrong and then seeing why is what actually builds the model; skipping straight to the answer doesn't.
-**Time budget:** ~3 hours
+**Time budget:** \~3 hours
 
 ---
 
 ## Quick bridge from Session S01
 
-Session S01 gave you structure with zero visual styling — a page of plain, stacked, black-on-white text that was nonetheless *correct*: semantically meaningful landmarks, a real form, real accessibility attributes. Everything in this session answers the question you were left with at the end of S01: *why does my `chat-shell.html` look like plain text instead of a chat app?* By the end of today, the answer will be fully mechanical to you rather than mysterious — and, importantly, you'll understand it well enough to predict what a new CSS rule will do *before* you run it, which is the actual skill, not the syntax.
+Session S01 gave you structure with zero visual styling — a page of plain, stacked, black-on-white text that was nonetheless *correct*: semantically meaningful landmarks, a real form, real accessibility attributes. Everything in this session answers the question you were left with at the end of S01: *why does my* `chat-shell.html` *look like plain text instead of a chat app?* By the end of today, the answer will be fully mechanical to you rather than mysterious — and, importantly, you'll understand it well enough to predict what a new CSS rule will do *before* you run it, which is the actual skill, not the syntax.
 
 ---
 
@@ -20,6 +21,7 @@ Session S01 gave you structure with zero visual styling — a page of plain, sta
 HTML answers "what is this?" — a heading, a button, a paragraph. CSS answers a completely different question: "how should this look, and where should it sit?" These are deliberately kept as two separate languages rather than one combined one, for the same reason you'd keep a Pydantic schema separate from the logic that renders a report from it: the *shape* of your data and the *presentation* of your data change for different reasons, at different times, often maintained by different people — mixing them makes both harder to change independently.
 
 **CSS stands for Cascading Style Sheets**, and every word in that name is load-bearing:
+
 - **Style Sheets** — a CSS file is a *sheet of rules*, each rule saying "for elements matching this selector, apply these property values."
 - **Cascading** — this is the word that will occupy most of Section 3, and it's the single most misunderstood idea in CSS by beginners. It means: when *multiple* rules could apply to the same element, there is a precise, deterministic algorithm — not a guess, not "whichever CSS file loads last" — that decides which one wins.
 
@@ -77,7 +79,7 @@ Before Section 3's mechanism-level deep dive into how conflicting rules get reso
 **Color and background**
 
 | Property | Purpose |
-|---|---|
+| --- | --- |
 | `color` | Text color |
 | `background-color` | The element's own background fill |
 | `background-image` | An image (or gradient) as the background |
@@ -86,7 +88,7 @@ Before Section 3's mechanism-level deep dive into how conflicting rules get reso
 **Typography**
 
 | Property | Purpose |
-|---|---|
+| --- | --- |
 | `font-family` | Which typeface to use |
 | `font-size` | Text size |
 | `font-weight` | Boldness (`400` normal, `700` bold, etc.) |
@@ -97,7 +99,7 @@ Before Section 3's mechanism-level deep dive into how conflicting rules get reso
 **Spacing and sizing** *(Section 4 covers the box model these all belong to, properly)*
 
 | Property | Purpose |
-|---|---|
+| --- | --- |
 | `width`, `height` | The element's own dimensions |
 | `margin` | Space outside the border, between elements |
 | `padding` | Space inside the border, around the content |
@@ -106,7 +108,7 @@ Before Section 3's mechanism-level deep dive into how conflicting rules get reso
 **Borders and radius**
 
 | Property | Purpose |
-|---|---|
+| --- | --- |
 | `border` | A visible line around the padding |
 | `border-radius` | Rounds the corners |
 | `box-shadow` | A drop shadow around the element's box |
@@ -114,14 +116,14 @@ Before Section 3's mechanism-level deep dive into how conflicting rules get reso
 **Layout** *(the deepest mechanisms — Section 4 here, and Session S03's Flexbox/Grid)*
 
 | Property | Purpose |
-|---|---|
+| --- | --- |
 | `display` | What layout mode this element participates in (`block`, `inline`, `flex`, `grid`, `none`) |
 | `position` | How the element is positioned relative to its normal place — full depth in Session S03 |
 
 **Effects**
 
 | Property | Purpose |
-|---|---|
+| --- | --- |
 | `transition` | Smooths a property's change over time — full depth in Session S03 |
 | `transform` | Moves, rotates, or scales an element visually, without affecting layout |
 | `cursor` | What the mouse pointer looks like when hovering this element |
@@ -163,7 +165,7 @@ This is the part most tutorials wave their hands at. Let's not do that — let's
 Specificity is a **three-part score**, conventionally written as three numbers, calculated by counting how many of each of these a selector contains:
 
 | Category | What counts | Example |
-|---|---|---|
+| --- | --- | --- |
 | **A** (highest) | ID selectors | `#chat-input` |
 | **B** (middle) | Classes, attribute selectors, pseudo-classes | `.btn`, `[type="submit"]`, `:hover` |
 | **C** (lowest) | Element (type) selectors, pseudo-elements | `button`, `p`, `::before` |
@@ -171,20 +173,24 @@ Specificity is a **three-part score**, conventionally written as three numbers, 
 You compute a selector's specificity by counting how many of A, B, and C it contains, giving you a score like `(A, B, C)`. To compare two selectors, compare A first — higher A always wins outright, no matter what B or C are. Only if A ties do you compare B. Only if B also ties do you compare C.
 
 **Worked example 1 — predict, then check:**
+
 ```css
 .sidebar button { color: blue; }
 button { color: green; }
 ```
-Which color wins for a `<button>` inside `<div class="sidebar">`? Work it out: `.sidebar button` has one class (B=1) and one element (C=1) → score `(0, 1, 1)`. `button` alone has one element (C=1) → score `(0, 0, 1)`. Comparing left to right: A ties (0=0), B differs (1 > 0) — `.sidebar button` wins. **The button is blue**, regardless of which rule appears later in the file, because specificity is checked *before* source order, not after.
+
+Which color wins for a `<button>` inside `<div class="sidebar">`? Work it out: `.sidebar button` has one class (B=1) and one element (C=1) → score `(0, 1, 1)`. `button` alone has one element (C=1) → score `(0, 0, 1)`. Comparing left to right: A ties (0=0), B differs (1 &gt; 0) — `.sidebar button` wins. **The button is blue**, regardless of which rule appears later in the file, because specificity is checked *before* source order, not after.
 
 **Worked example 2 — predict, then check:**
+
 ```css
 #send-btn { background: purple; }
 .btn.primary { background: orange; }
 ```
+
 `#send-btn` has one ID → `(1, 0, 0)`. `.btn.primary` has two classes → `(0, 2, 0)`. Comparing A first: `1 > 0` — **the ID wins outright**, background is purple, even though the class selector "looks like it has more stuff" in it. This is the single most common source of "why won't my CSS class override this?!" confusion — an ID anywhere in a selector dominates any number of classes, always, because A is compared before B and a tie is required before B is ever even looked at.
 
-**Quick check — try this one yourself before reading the answer:** Between `nav ul li a` and `.nav-link`, which wins? *(Answer: `nav ul li a` has four elements → `(0,0,4)`. `.nav-link` has one class → `(0,1,0)`. Comparing A: tied at 0. Comparing B: `1 > 0` — `.nav-link` wins, despite having far fewer selectors written. This surprises almost everyone the first time — "four things" instinctively feels stronger than "one thing," but the category matters more than the count within a lower category.)*
+**Quick check — try this one yourself before reading the answer:** Between `nav ul li a` and `.nav-link`, which wins? *(Answer:* `nav ul li a` *has four elements →* `(0,0,4)`*.* `.nav-link` *has one class →* `(0,1,0)`*. Comparing A: tied at 0. Comparing B:* `1 > 0` *—* `.nav-link` *wins, despite having far fewer selectors written. This surprises almost everyone the first time — "four things" instinctively feels stronger than "one thing," but the category matters more than the count within a lower category.)*
 
 ### 2.3 — Why This Matters for Everything Coming Later in the Syllabus
 
@@ -247,7 +253,7 @@ Almost nobody actually wants this. When you say "I want this box to be 200px wid
 
 This single rule, applied globally with the universal selector `*`, changes `width` to mean "this is the *total* width, including padding and border — the browser will shrink the *content* area to make room for them, not add padding and border on top." With `border-box` set, that same `.box` (`width: 200px; padding: 20px; border: 5px solid`) renders at exactly 200px total, with the content area automatically calculated as `200 - 40 (padding) - 10 (border) = 150px`.
 
-**Every professional CSS codebase you will ever work in sets `box-sizing: border-box` globally, on line one.** It is not a style preference — it's a correction to a default that essentially nobody actually wants, and Session S04's Foundation Project treats it as a required setup step, not an optional one.
+**Every professional CSS codebase you will ever work in sets** `box-sizing: border-box` **globally, on line one.** It is not a style preference — it's a correction to a default that essentially nobody actually wants, and Session S04's Foundation Project treats it as a required setup step, not an optional one.
 
 ### `margin: auto` — the trick that only works one specific way
 
@@ -276,7 +282,7 @@ Session S01's rendering-pipeline section told you that the render tree "contains
 
 An element with `display: none` isn't merely invisible — it has **no box at all**. Not a zero-size box, not a transparent box: no content, padding, border, or margin occupying any space, anywhere, as far as layout is concerned. Every other element on the page lays out exactly as if that element didn't exist in the document at all. This is different from setting `visibility: hidden`, which *keeps* the box's full space reserved (invisible, but still pushing its neighbors exactly as before) — a distinction sharp enough to cause real layout bugs when confused, and one Session S03 will return to directly, once you've also met `position` and can see both properties working side by side in a real layout.
 
-**Predict before you peek:** if a sidebar item has `display: none` applied while the user is typing in the search box, then a later click removes that `display: none` (making it visible again) — does every element below it in the layout shift downward, or stay exactly where it was? *(They shift — because the instant the box re-enters the render tree, it once again occupies real space in normal flow, pushing everything after it down exactly as if it had been there all along. This "everything jumps" behavior is precisely why toggling visibility with `display: none`/`display: block` can look janky for things like dropdown menus, and precisely why Session S03's positioning techniques — `position: absolute` in particular — exist as an alternative for exactly this situation.)*
+**Predict before you peek:** if a sidebar item has `display: none` applied while the user is typing in the search box, then a later click removes that `display: none` (making it visible again) — does every element below it in the layout shift downward, or stay exactly where it was? *(They shift — because the instant the box re-enters the render tree, it once again occupies real space in normal flow, pushing everything after it down exactly as if it had been there all along. This "everything jumps" behavior is precisely why toggling visibility with* `display: none`*/*`display: block` *can look janky for things like dropdown menus, and precisely why Session S03's positioning techniques —* `position: absolute` *in particular — exist as an alternative for exactly this situation.)*
 
 > **Explain it back to yourself, out loud, before moving on:** in your own words, why does a 200px-wide box with padding and border only actually render at 200px total *after* you set `box-sizing: border-box`, and not before? If you can't say it without re-reading, re-read the box-sizing paragraph once more before continuing — this is the single most load-bearing concept in this whole section.
 
@@ -287,7 +293,7 @@ An element with `display: none` isn't merely invisible — it has **no box at al
 CSS gives you far more units than "pixels," and the ones you pick shape how your page behaves when a user zooms, resizes their browser, or views it on a phone. Rather than memorizing a list, reason through *why* each exists:
 
 | Unit | What it's relative to | When to reach for it |
-|---|---|---|
+| --- | --- | --- |
 | `px` | Nothing — an absolute, fixed size | Borders, shadows — things that should never scale with user font preferences |
 | `rem` | The root (`<html>`) element's font size | Spacing, font sizes — the default choice for most sizing, because it respects a user's browser-level font-size preference |
 | `em` | The *parent* element's font size | Padding *inside* a specific component, where you want it to scale proportionally with that component's own font size |
@@ -296,9 +302,9 @@ CSS gives you far more units than "pixels," and the ones you pick shape how your
 | `dvh` | The *actual visible* viewport height, accounting for mobile browser UI | Mobile layouts — see the gotcha below |
 | `ch` | The width of the `"0"` character in the current font | Setting a readable maximum line length for body text |
 
-**The `rem` vs `em` distinction, reasoned through:** `1.5rem` always means "1.5 × the root font size," full stop, regardless of where in the page you write it — predictable everywhere. `1.5em` means "1.5 × *this element's own parent's* font size" — which means if you nest elements that each set their own font-size in `em`, the values compound multiplicatively down the tree, an effect that surprises people the first time a deeply nested element turns out three times larger than intended. This is exactly *why* Tailwind v4 (Session S15) and most professional systems default to `rem` for nearly everything — predictability wins over the occasional convenience of proportional nesting.
+**The** `rem` **vs** `em` **distinction, reasoned through:** `1.5rem` always means "1.5 × the root font size," full stop, regardless of where in the page you write it — predictable everywhere. `1.5em` means "1.5 × *this element's own parent's* font size" — which means if you nest elements that each set their own font-size in `em`, the values compound multiplicatively down the tree, an effect that surprises people the first time a deeply nested element turns out three times larger than intended. This is exactly *why* Tailwind v4 (Session S15) and most professional systems default to `rem` for nearly everything — predictability wins over the occasional convenience of proportional nesting.
 
-**The `vh` vs `dvh` gotcha, specifically for later:** on mobile browsers, the address bar and toolbar can show or hide as you scroll, which means the "viewport height" itself isn't constant — `100vh` on a phone is calculated against the *tallest possible* viewport (toolbar hidden), so a full-height element sized with `vh` can end up taller than the space actually visible when the toolbar is showing, causing content to be cut off at the bottom. `dvh` ("dynamic viewport height") recalculates continuously as the toolbar shows/hides, avoiding this. You'll use this for real in Session S03's responsive design work.
+**The** `vh` **vs** `dvh` **gotcha, specifically for later:** on mobile browsers, the address bar and toolbar can show or hide as you scroll, which means the "viewport height" itself isn't constant — `100vh` on a phone is calculated against the *tallest possible* viewport (toolbar hidden), so a full-height element sized with `vh` can end up taller than the space actually visible when the toolbar is showing, causing content to be cut off at the bottom. `dvh` ("dynamic viewport height") recalculates continuously as the toolbar shows/hides, avoiding this. You'll use this for real in Session S03's responsive design work.
 
 ---
 
@@ -306,7 +312,7 @@ CSS gives you far more units than "pixels," and the ones you pick shape how your
 
 ### Why this section matters more than its place in the syllabus suggests
 
-I want to be direct about something: this is the single most important section in today's session for your *specific* 37-day path, more than the cascade, more than the box model. **The entire BIA UI's light/dark theming system, and the entirety of Tailwind v4's `@theme` configuration you'll meet in Session S15, is built on exactly the mechanism in this section and nothing more exotic.** If this section is solid, two sessions from now, "how does the whole app switch to dark mode with one class toggle?" will already make complete sense to you before I even explain it — that's how directly this connects forward.
+I want to be direct about something: this is the single most important section in today's session for your *specific* 37-day path, more than the cascade, more than the box model. **The entire BIA UI's light/dark theming system, and the entirety of Tailwind v4's** `@theme` **configuration you'll meet in Session S15, is built on exactly the mechanism in this section and nothing more exotic.** If this section is solid, two sessions from now, "how does the whole app switch to dark mode with one class toggle?" will already make complete sense to you before I even explain it — that's how directly this connects forward.
 
 ### What a custom property actually is
 
@@ -322,7 +328,7 @@ I want to be direct about something: this is the single most important section i
 
 `--primary-color` is a **custom property** — you're free to name it anything, as long as it starts with two dashes. `:root` is a selector matching the `<html>` element (the top of the document tree) — declaring a custom property there makes it available to *every* element on the page, because of the next fact:
 
-**Custom properties inherit down the document tree, exactly like `color` and `font-size` do.** This is directly confirmed by MDN: if a child element doesn't set its own value for a custom property, it uses whatever value its parent has — cascading down through as many levels of nesting as exist. This is the mechanism, not a metaphor: `var(--primary-color)` used inside a deeply-nested button still resolves correctly because the value cascaded all the way down from `:root`.
+**Custom properties inherit down the document tree, exactly like** `color` **and** `font-size` **do.** This is directly confirmed by MDN: if a child element doesn't set its own value for a custom property, it uses whatever value its parent has — cascading down through as many levels of nesting as exist. This is the mechanism, not a metaphor: `var(--primary-color)` used inside a deeply-nested button still resolves correctly because the value cascaded all the way down from `:root`.
 
 `var(--primary-color)` is how you *use* a custom property's value inside another declaration. It behaves like a live substitution — change the `:root` declaration once, and every single `var(--primary-color)` usage across your entire stylesheet updates simultaneously, without you touching each one individually.
 
@@ -363,7 +369,7 @@ body {
 
 That's the whole mechanism. `:root` sets the light-mode values. `.dark` — a class you can add or remove from `<html>` with one line of future JavaScript — *redeclares the same variable names* with dark-mode values. Because `.dark` is more specific than `:root` (a class beats a pseudo-class targeting the same element, by the specificity rules from Section 3.2 — both are B-category, but if `.dark` is applied directly to `<html>` alongside the implicit root match, the explicit class selector wins the tie), every single `var(--background)` and `var(--text-color)` usage across the *entire page* — no matter how deeply nested — switches instantly and simultaneously the moment that one class is toggled. No JavaScript touches the individual buttons, bubbles, or backgrounds directly; they were never hard-coded to a color in the first place, only ever hard-coded to a *variable name*, and the variable's value is what changes.
 
-> **Explain it back to yourself:** if you added a third selector, `.dark .sidebar { --background: black; }`, overriding `--background` specifically inside the sidebar while dark mode is active, would the sidebar's background differ from the rest of the dark-mode page? *(Yes — because that declaration is more specific and scoped to a smaller subtree; every element inside `.sidebar` inherits the more specific override, while everything outside it still inherits `.dark`'s value. This is the exact mechanism a real design system uses for "mostly-dark-but-this-one-section-is-different" theming.)*
+> **Explain it back to yourself:** if you added a third selector, `.dark .sidebar { --background: black; }`, overriding `--background` specifically inside the sidebar while dark mode is active, would the sidebar's background differ from the rest of the dark-mode page? *(Yes — because that declaration is more specific and scoped to a smaller subtree; every element inside* `.sidebar` *inherits the more specific override, while everything outside it still inherits* `.dark`*'s value. This is the exact mechanism a real design system uses for "mostly-dark-but-this-one-section-is-different" theming.)*
 
 ---
 
@@ -380,9 +386,9 @@ p:not(.highlighted) { }   /* any <p> WITHOUT this class */
 [data-state="open"] { }   /* matches any element with this exact attribute value */
 ```
 
-**`:focus-visible` vs. `:focus` — a distinction that matters for accessibility, connecting directly back to Session S01.** `:focus` matches *any* time an element has focus, including a plain mouse click — which is why some sites annoyingly show a focus ring after every click, even for sighted mouse users who don't need one. `:focus-visible` is smarter: the browser only applies it when it *infers* the user is navigating by keyboard (Tab key), suppressing it for a simple mouse click. Use `:focus-visible` for your focus-ring styling going forward — it gives keyboard users the visible ring Session S01 requires, without visual noise for mouse users.
+`:focus-visible` **vs.** `:focus` **— a distinction that matters for accessibility, connecting directly back to Session S01.** `:focus` matches *any* time an element has focus, including a plain mouse click — which is why some sites annoyingly show a focus ring after every click, even for sighted mouse users who don't need one. `:focus-visible` is smarter: the browser only applies it when it *infers* the user is navigating by keyboard (Tab key), suppressing it for a simple mouse click. Use `:focus-visible` for your focus-ring styling going forward — it gives keyboard users the visible ring Session S01 requires, without visual noise for mouse users.
 
-**`[data-state="open"]` — the attribute selector, and why it matters far more than it looks like it should right now.** This targets any element carrying a `data-state` attribute with that exact value. File this away: Radix UI — the underlying library beneath every shadcn/UI component you'll build starting Session S17 — manages its own component state (open/closed, checked/unchecked) by writing exactly this kind of `data-*` attribute onto the DOM element itself, and its accompanying CSS then targets `[data-state="open"]` to animate the transition. You are not going to build Radix-style components today. But the selector mechanism making that possible is fully covered, right now, in one line above.
+`[data-state="open"]` **— the attribute selector, and why it matters far more than it looks like it should right now.** This targets any element carrying a `data-state` attribute with that exact value. File this away: Radix UI — the underlying library beneath every shadcn/UI component you'll build starting Session S17 — manages its own component state (open/closed, checked/unchecked) by writing exactly this kind of `data-*` attribute onto the DOM element itself, and its accompanying CSS then targets `[data-state="open"]` to animate the transition. You are not going to build Radix-style components today. But the selector mechanism making that possible is fully covered, right now, in one line above.
 
 ---
 
@@ -474,6 +480,7 @@ Without running any code, compute the `(A, B, C)` specificity score for each of 
 ### Exercise 2 (Medium) — Fix the Box Model Bug
 
 Given this CSS, a designer says "the card should be exactly 300px wide, but it's rendering wider than that and I don't know why":
+
 ```css
 .card {
   width: 300px;
@@ -481,6 +488,7 @@ Given this CSS, a designer says "the card should be exactly 300px wide, but it's
   border: 2px solid #ccc;
 }
 ```
+
 Diagnose the actual rendered width without a browser (do the arithmetic by hand), explain in one sentence *why* it's wider than 300px, and write the one-line fix that makes 300px the true final width.
 
 **Success criteria:** your stated "actual width" arithmetic matches `300 + 48 + 4 = 352px`, and your fix is the global `box-sizing: border-box` rule (or, acceptably, `box-sizing: border-box` scoped to `.card` alone, with a note on why the global rule from Section 4 is still the better long-term choice).
@@ -498,6 +506,7 @@ Extend Section 8's capstone file to support **three** themes instead of two: lig
 ### Pitfall 1 — Forgetting `box-sizing: border-box`, then "fixing" widths by trial and error
 
 **WRONG (what beginners actually do):**
+
 ```css
 .sidebar {
   width: 260px;
@@ -515,6 +524,7 @@ Extend Section 8's capstone file to support **three** themes instead of two: lig
 **WHY:** Without `box-sizing: border-box`, `width` only ever describes the content box, and padding/border are added on top every time — so any change to padding anywhere requires re-guessing every hard-coded width across the whole file, forever.
 
 **FIX:**
+
 ```css
 * {
   box-sizing: border-box;
@@ -528,6 +538,7 @@ Extend Section 8's capstone file to support **three** themes instead of two: lig
 ### Pitfall 2 — Splitting an HSL color into separate custom-property "channels"
 
 **WRONG:**
+
 ```css
 :root {
   --hue: 356;
@@ -544,6 +555,7 @@ Extend Section 8's capstone file to support **three** themes instead of two: lig
 **WHY:** Tailwind v4 and most production design systems store each *complete* color as one variable (`--primary: hsl(356 82% 50%)`), not as separate hue/saturation/lightness channel variables — splitting into channels is a legitimate technique for dynamic hue manipulation in specific animation cases, but it is not the default convention, and mixing the two approaches in one codebase creates exactly the kind of inconsistency Session S15 will explicitly warn you about.
 
 **FIX:**
+
 ```css
 :root {
   --primary: hsl(356 82% 50%);
@@ -584,9 +596,10 @@ https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 Odin's Foundations course covers the cascade, specificity, and the box model — but at noticeably lighter depth than this session, and by explicit design: Odin's own introduction lesson states plainly that deeper CSS (variables, functions, shadows, Grid) is intentionally deferred to later in its curriculum, with this early material meant as a first pass, not the full treatment.
 
 **What this session covers that Odin's equivalent lesson doesn't reach yet:**
+
 - **CSS Custom Properties** (Section 6) — Odin's own materials explicitly flag variables as "learned throughout this course," not in its foundational cascade lesson; you're getting the full mechanism now, Session 2, because the dark-mode toggle it enables is load-bearing for the rest of this syllabus.
 - **The exact three-part specificity scoring system**, computed by hand on real worked examples (Section 3.2) — most introductory resources, Odin included at this stage, describe specificity conceptually without walking through the actual arithmetic the way this session does.
-- **The `dvh` unit and its mobile-viewport rationale** (Section 5) — a genuinely modern addition most Foundations-level material predates.
+- **The** `dvh` **unit and its mobile-viewport rationale** (Section 5) — a genuinely modern addition most Foundations-level material predates.
 
 **What to use Odin for, alongside this:** Odin's box-model and cascade lessons are a good second explanation in different words if anything here didn't click the first time, and its exercises are additional practice reps beyond the three in Section 10 — treat the two as complementary, not redundant, exactly as established in Session S01.
 
@@ -601,17 +614,25 @@ Everything today assumed elements simply stack top-to-bottom, one after another 
 ## 15. Key Takeaways Checklist
 
 - [ ] State, from memory, the three-step cascade tiebreaker order (importance → specificity → source order)
+
 - [ ] Compute the `(A, B, C)` specificity score for any selector by hand, without a tool
+
 - [ ] Explain why an ID selector always beats any number of classes, in terms of the comparison algorithm, not just "IDs are stronger"
+
 - [ ] Draw the box model's four layers from memory and correctly place "content, padding, border, margin" in order from inside out
+
 - [ ] Explain precisely why `box-sizing: border-box` changes what `width` means, and why nearly every professional stylesheet sets it globally
+
 - [ ] Explain why `rem` is generally preferred over `em` for most sizing, in terms of compounding
+
 - [ ] Explain, without notes, the complete mechanism by which one class (`.dark`) on `<html>` can instantly retheme an entire page with zero JavaScript touching individual elements
+
 - [ ] State the difference between `:focus` and `:focus-visible` and why the latter is the correct choice for focus rings
 
 If any box is unchecked, don't move to Session S03 yet — go back to that section and re-read it, ideally out loud, explaining it as if to someone else. That's not busywork; it's the actual mechanism by which this becomes something you can do without help later.
 
 ---
+
 ---
 
 # Appendix — Tutorial QA Framework Validator Audit
