@@ -1,0 +1,40 @@
+/* The key design elements are as follows: - The universal selector (*) is used to apply box-sizing,
+padding,
+and border properties to all elements. - The .box1 class defines a box with a width and height of 200px,
+a red background color,
+padding of 20px,
+a black border of 10px,
+and a margin of 10px. The box-sizing property is set to border-box,
+which means that the padding and border are included in the total width and height of the box. - The .box2 class defines a box with the same width and height,
+a green background color,
+padding of 20px,
+a black border of 10px,
+and a margin of 10px. However,
+the box-sizing property is set to content-box,
+which means that the */
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    border: 0;
+
+}
+
+.box1 {
+    width: 200px;
+    height: 200px;
+    background-color: #f00;
+    padding: 20px;
+    border: 10px solid #000;
+    margin: 10px;
+}
+
+.box2 {
+    width: 200px;
+    height: 200px;
+    background-color: #0f0;
+    padding: 20px;
+    box-sizing: content-box;
+    border: 10px solid #000;
+    margin: 10px;
+}
