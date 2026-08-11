@@ -1,0 +1,21 @@
+/* The objective is to show the use of flex-shrink property. The first and third divs will have the same size, while the second div will be twice as big as the other two. */
+.flex-container {
+    display: flex;
+}
+
+/* this selector selects all divs inside of .flex-container */
+.flex-container div {
+    background: peachpuff;
+    border: 4px solid brown;
+    height: 200px;
+    width: 250px;
+    flex: 1 1 auto;
+    font-size: 30px;
+    font-family: sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.flex-container .two {
+    flex-shrink: 0;
+}
