@@ -1,12 +1,11 @@
 # Session S04 — Foundation Project
-
 ### Static Chat UI: Pixel-Perfect, Responsive & Accessible
 
 **Syllabus position:** Phase F1 (HTML/CSS Foundations) · Day 4 of 37 · AgentStack Golden Canon v8 Slim · **Phase F1 capstone**
 **Prerequisites:** Sessions S01 (HTML5), S02 (CSS Fundamentals), S03 (CSS Layout)
 **Companion track:** The Odin Project — see Section 12 for how this milestone lines up with pausing on Odin
 **Standing objective:** unchanged — genuine understanding over copy-paste. Today looks slightly different in format: fewer new concepts, more building, because this is a consolidation day, not a new-material day.
-**Time budget:** \~3 hours
+**Time budget:** ~3 hours
 
 ---
 
@@ -31,12 +30,13 @@ Every course that teaches genuinely useful skills eventually needs a day like th
 ```css
 .sidebar {
   background-color: rgb(255 255 255 / 0.2);
+  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border-right: 1px solid var(--border);
 }
 ```
 
-"Glassmorphism" is a visual style — translucent, frosted-glass-looking panels — built from exactly two CSS mechanisms, both of which you can now understand precisely rather than as a copied effect. `rgb(255 255 255 / 0.2)` is a background color with an **alpha channel**: the `/ 0.2` sets 20% opacity for *this property alone*, letting whatever sits behind the sidebar show through faintly — this is different from the `opacity` property, which would fade the *entire element and all its children*, text included. `backdrop-filter: blur(24px)` blurs whatever is rendered **behind** the element, not the element's own content — the frosted-glass look comes from combining a semi-transparent background (so you can see the blurred content through it) with `backdrop-filter` blurring that visible-through content. Neither mechanism is new in kind — you've used `rgba`-style colors conceptually since S02's custom properties, and `backdrop-filter` is simply a filter, the same category of effect as `filter: blur()` you might apply directly to an image, just aimed at what's *underneath* instead of the element itself.
+"Glassmorphism" is a visual style — translucent, frosted-glass-looking panels — built from exactly two CSS mechanisms, both of which you can now understand precisely rather than as a copied effect. `rgb(255 255 255 / 0.2)` is a background color with an **alpha channel**: the `/ 0.2` sets 20% opacity for *this property alone*, letting whatever sits behind the sidebar show through faintly — this is different from the `opacity` property, which would fade the *entire element and all its children*, text included. `backdrop-filter: blur(24px)` blurs whatever is rendered **behind** the element, not the element's own content — the frosted-glass look comes from combining a semi-transparent background (so you can see the blurred content through it) with `backdrop-filter` blurring that visible-through content. Neither mechanism is new in kind — you've used `rgba`-style colors conceptually since S02's custom properties, and `backdrop-filter` is simply a filter, the same category of effect as `filter: blur()` you might apply directly to an image, just aimed at what's *underneath* instead of the element itself. One production detail worth including even though `backdrop-filter` reached Baseline support some time ago: pair every declaration with `-webkit-backdrop-filter` as well, written first. Safari's support history for this property was uneven for years, and a meaningful share of real-world Safari installs still benefit from the prefixed version being present — it costs one extra line and has zero downside on browsers that no longer need it.
 
 ### The mobile menu toggle — new technique #2, with an honest caveat
 
@@ -93,7 +93,7 @@ Pure application — no new theory, genuinely this time. This is exactly the mom
 }
 ```
 
-**Explain it back to yourself before reading on:** why does `.message.user` need `justify-content: flex-end` at all — what does that property even do here, and why does the *assistant* message need no equivalent rule? *(*`.message` *is a flex container;* `justify-content: flex-end` *pushes its one child — the bubble — to the end of the main axis, which right-aligns it. The assistant message has no such rule because* `flex-start`*, the default, already left-aligns it — there's nothing to override.)* If that answer didn't come immediately, that's Session S02/S03 territory, not new content — go back before continuing.
+**Explain it back to yourself before reading on:** why does `.message.user` need `justify-content: flex-end` at all — what does that property even do here, and why does the *assistant* message need no equivalent rule? *(`.message` is a flex container; `justify-content: flex-end` pushes its one child — the bubble — to the end of the main axis, which right-aligns it. The assistant message has no such rule because `flex-start`, the default, already left-aligns it — there's nothing to override.)* If that answer didn't come immediately, that's Session S02/S03 territory, not new content — go back before continuing.
 
 ---
 
@@ -112,7 +112,7 @@ Pure application — no new theory, genuinely this time. This is exactly the mom
 
 `field-sizing: content` tells a `<textarea>` to size itself to its actual content automatically — no JavaScript event listener, no manual height recalculation. This is a genuinely new CSS property (not something S01–S03 could have introduced, since it's specific to form elements), and it's worth knowing *why* it's a meaningful improvement, not just a shortcut: before this property existed, auto-resizing a textarea required a JavaScript `input` event listener that reset the height to `auto` and then immediately set it to `scrollHeight` on every single keystroke — forcing the browser to redo Layout (Session S01's rendering-pipeline stage 4) twice per keystroke. `field-sizing: content` does the equivalent work natively, without any of that forced-reflow cost, and without requiring JavaScript you don't have yet. `min-height: 44px` and `max-height: 200px` bound the growth — `44px` isn't arbitrary, it's the same touch-target minimum Session S03 established. `resize: none` disables the browser's own manual drag-resize handle, since auto-sizing makes it redundant.
 
-**Browser support, stated honestly rather than assumed:** as of this writing, `field-sizing` works in Chromium-based browsers (Chrome, Edge) and is landing in Safari; Firefox support is still catching up. This is fine for this session's learning purposes and for a rapidly-evolving Chromium-majority user base, but production code that must support all browsers today would pair this with a `@supports (field-sizing: content) { }` feature check and a JavaScript fallback for browsers where it isn't yet available — exactly the kind of "we haven't learned this tool yet, so we're using the best available alternative for now" situation Section 2's checkbox-hack caveat also described.
+**Browser support, stated honestly and re-verified for currency:** `field-sizing` reached Baseline "newly available" status across **all four major browser engines** — Chrome/Edge (123+, March 2024), Safari (26.2, December 2025), and Firefox (152, June 16, 2026) all now support it. If you're reading this after that date, treat it as safe to use directly; it's one of the rare CSS features that degrades perfectly gracefully even where it isn't supported — an unsupporting browser simply ignores the declaration and renders a normal fixed-size textarea, nothing breaks. For genuinely legacy browser support beyond that, pair it with a `@supports (field-sizing: content) { }` feature check and a JavaScript fallback, but as of mid-2026 this is no longer the routine precaution it was when this property first shipped.
 
 ```css
 .send-button {
@@ -172,13 +172,9 @@ The staggered `animation-delay` on the second and third dots (0.2s and 0.4s late
 This section introduces no new technique at all — it's a formal checklist version of requirements S01 already established, applied now to a complete, real interface rather than isolated examples.
 
 - [ ] Tab through every interactive element (sidebar toggle, every history item, Send, Stop, every dropdown trigger) and confirm the order matches the visual layout, top to bottom, left to right
-
 - [ ] Confirm `aria-live="polite"` is present on the message list container (S01, Section 8)
-
 - [ ] Confirm the message input has `aria-label="Send a message"` if its visual label is only a placeholder, not real `<label>` text
-
 - [ ] Confirm every button has a visible focus ring — zero instances of `outline: none` anywhere without a replacement focus style (S01's explicit hard requirement)
-
 - [ ] Confirm decorative icons (the shimmer skeleton, the typing dots) carry `aria-hidden="true"` if they convey no information a screen reader needs to announce separately from the surrounding text
 
 Run this exact checklist against your actual build below before considering it done — a checklist you don't run against real work isn't actually an audit, it's a reading exercise.
@@ -332,6 +328,7 @@ body {
   display: none;
   flex-direction: column;
   background-color: rgb(255 255 255 / 0.2);
+  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border-right: 1px solid var(--border);
   padding: 16px;
@@ -542,7 +539,6 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 ### Pitfall 1 — Forgetting the `-webkit-` scrollbar prefix, then wondering why Chrome looks wrong
 
 **WRONG:**
-
 ```css
 .message-list {
   scrollbar-width: thin;
@@ -555,7 +551,6 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 **WHY:** `scrollbar-width`/`scrollbar-color` are the modern standardized properties, supported by Firefox and increasingly by Chromium, but full, reliable coverage across all Chromium-based browsers today still requires the older `::-webkit-scrollbar` pseudo-element family alongside them — the two mechanisms don't fall back to each other automatically.
 
 **FIX:**
-
 ```css
 .message-list {
   scrollbar-width: thin;
@@ -568,7 +563,6 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 ### Pitfall 2 — Skeleton dimensions that don't match the real content they replace
 
 **WRONG:**
-
 ```css
 .skeleton { height: 12px; }
 /* ...but the real sidebar item, once loaded, is 20px tall with padding */
@@ -584,15 +578,15 @@ Write a short code comment block directly above the `.sidebar-toggle-input` CSS 
 
 ## 12. Further Reading
 
-**MDN —** `backdrop-filter`
+**MDN — `backdrop-filter`**
 The official reference for today's glassmorphism technique.
 https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
 
-**MDN —** `field-sizing`
+**MDN — `field-sizing`**
 The official, current reference for the auto-resizing textarea property — check this page directly for the latest browser support table before relying on it in any project beyond this syllabus.
 https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing
 
-**MDN — General sibling combinator (**`~`**)**
+**MDN — General sibling combinator (`~`)**
 The official reference for the selector mechanism behind today's checkbox-hack toggle.
 https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator
 
@@ -615,23 +609,16 @@ One thing worth carrying into that pause deliberately: Odin's Flexbox unit, as n
 ## 14. Key Takeaways Checklist
 
 - [ ] Explain what `backdrop-filter` blurs, specifically, and how it differs from applying `filter: blur()` directly to an element
-
 - [ ] Explain the general sibling selector (`~`) and how it, combined with `:checked` and `label[for]`, produces interactivity with zero JavaScript
-
 - [ ] State the accessibility limitation of the checkbox-hack toggle precisely, in terms of what a screen reader announces
-
 - [ ] Explain what `field-sizing: content` replaces, and why the thing it replaces was expensive (tying back to Session S01's rendering pipeline)
-
 - [ ] State the "same dimensions as final content" rule for skeleton loaders, and why breaking it causes a layout shift
-
 - [ ] Name both scrollbar-styling mechanisms (`scrollbar-width`/`scrollbar-color` and `::-webkit-scrollbar`) and why both are needed together
-
 - [ ] Run the full Section 6 accessibility checklist against your own build, not just read it
 
 If every box is checked and your build passes the accessibility audit for real, Phase F1 is genuinely complete — not just "sessions attended," but the actual skill it was training.
 
 ---
-
 ---
 
 # Appendix — Tutorial QA Framework Validator Audit
