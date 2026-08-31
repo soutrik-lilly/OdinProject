@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Page</title>
+</head>
+
+<body>
+    <!--  Header section for the page -->
+    <header>
+        <h1>header tag is used to define a header for a document or a section</h1>
+        <p>It can contain headings, navigation links, logos, and other introductory content.</p>
+    </header>
+    <!--  Navigation section for the page explaining the purpose of the nav tag -->
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <!--  Main section for the page explaining the purpose of the main tag -->
+    <main>
+        <h2>Main Content</h2>
+        <p>This is the main content of the page. It can include articles, blog posts, images, and other relevant
+            information.</p>
+        <section>
+            <h3>Learn More about HTML</h3>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">Click here to learn more about
+                HTML</a>
+            <img src="./images/photo_sample.jpg" alt="Sample Image" width="400">
+        </section>
+        <article>
+            <h3>Article Title</h3>
+            <p>This article can contain a self-contained piece of content, such as a news story or a blog post.</p>
+        </article>
+        <section>
+            <h3>Click here to log in</h3>
+            <button type="button" onclick="alert('Login functionality is not implemented yet.')">Log In</button>
+        </section>
+        <table>
+            <br>
+            <caption>Conversation Summary — Last 7 Days</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Messages</th>
+                    <th scope="col">Avg. Response Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Aug 18</th>
+                    <td>42</td>
+                    <td>1.8s</td>
+                </tr>
+                <tr>
+                    <th scope="row">Aug 19</th>
+                    <td>37</td>
+                    <td>2.1s</td>
+                </tr>
+            </tbody>
+        </table>
+        <form>
+            <br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <button type="submit" onclick="alert('Form submission is not implemented yet.')">Submit</button>
+        </form>
+        <!-- Sighted users see a small "×" glyph. A screen reader announces "Close dialog, button" — because aria-label overrides what would otherwise just be read as the literal character "×". -->
+        <button type="button" aria-label="Close dialog">×</button>
+
+    </main>
+    <aside>
+        <h2>Sidebar</h2>
+        <p>This sidebar can contain additional information, links, or advertisements.</p>
+    </aside>
+    <footer>
+        <ol>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ol>
+        <p>&copy; 2024 My First Page. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

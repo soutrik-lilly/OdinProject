@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIA Chat — Session S01 Shell</title>
+</head>
+
+<body>
+
+    <header>
+        <button type="button" aria-label="Toggle chat history sidebar">☰</button>
+        <h1>BIA Assistant</h1>
+    </header>
+
+    <nav aria-label="Chat history">
+        <h2>Chat History</h2>
+        <ul>
+            <li><button type="button">Kubernetes manifest question</button></li>
+            <li><button type="button">Drizzle schema design</button></li>
+            <li><button type="button">SSE parsing gotcha</button></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>Conversation</h2>
+
+        <div aria-live="polite" id="message-list">
+            <p><strong>You:</strong> How do I parse SSE with a buffer?</p>
+            <p><strong>Assistant:</strong> Accumulate chunks in a string, split on newline, and keep the last incomplete
+                line in the buffer for next time.</p>
+        </div>
+
+        <form>
+            <label for="chat-input">Your message</label>
+            <textarea id="chat-input" name="message" rows="1" required></textarea>
+            <button type="submit">Send</button>
+            <button type="button" aria-label="Stop generating response">Stop</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 BIA Unified Intelligence Platform</p>
+    </footer>
+
+</body>
+
+</html>
