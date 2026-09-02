@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIA Chat — Capstone Shell</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <button type="button" aria-label="Toggle chat history sidebar">☰</button>
+        <h1>BIA Assistant</h1>
+    </header>
+
+    <nav aria-label="Chat history">
+        <h2>Chat History</h2>
+        <ul>
+            <li><button type="button" data-active="true">Kubernetes manifest question</button></li>
+            <li><button type="button">Drizzle schema design</button></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>Conversation</h2>
+
+        <div aria-live="polite" id="message-list">
+            <p><strong>You:</strong> How do I center a fixed-width box?</p>
+            <p><strong>Assistant:</strong> <code>margin: 0 auto</code> on a block element with an explicit width.</p>
+        </div>
+
+        <form>
+            <label for="chat-input">Your message</label>
+            <textarea id="chat-input" name="message" rows="1" required></textarea>
+            <button type="submit">Send</button>
+            <button type="button" aria-label="Stop generating response">Stop</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 BIA Unified Intelligence Platform</p>
+    </footer>
+
+</body>
+
+</html>

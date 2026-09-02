@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --sidebar-active: #dbeafe;
+    --focus-ring-color: #2563eb;
+}
+
+.dark {
+    --background: #0b1220;
+    --foreground: #f1f5f9;
+    --sidebar-active: #93a5c3;
+    --focus-ring-color: #93c5fd;
+}
+
+.high-contrast {
+    --background: #d5d5d5;
+    --foreground: #b37171;
+    --sidebar-active: #acf2d2;
+    --focus-ring-color: #facc15;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+nav button[data-active="true"] {
+    background-color: var(--sidebar-active);
+}
+
+nav button:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}

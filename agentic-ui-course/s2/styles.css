@@ -1,0 +1,85 @@
+/* styles.css */
+* {
+    box-sizing: border-box;
+}
+
+/* Adding a dark mode theme using CSS variables. The :root selector defines the default values for the variables, and the .dark class overrides them for dark mode. */
+
+:root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --primary: #b85656;
+    --primary-foreground: #ffffff;
+    --muted: #e2e8f0;
+    --border: #cbd5e1;
+    --focus-ring-color: #2563eb;
+}
+
+.dark {
+    --background: #404042;
+    --foreground: #f1f5f9;
+    --primary: #6b4a4a;
+    --primary-foreground: #ffffff;
+    --muted: #78713e;
+    --border: #eff2f5;
+    --focus-ring-color: #93c5fd;
+}
+
+/*  applying the CSS variables to the body element to set the background and text color based on the current theme. */
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: system-ui, sans-serif;
+    margin: 0;
+}
+
+/*  navigation styles for the sidebar, including background color, padding, and border. The nav element is set to a fixed width and uses flexbox to arrange its child elements in a column. */
+nav button {
+    display: block;
+    width: 30%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+nav button[data-active="true"] {
+    background-color: var(--muted);
+    font-weight: 600;
+}
+
+/*  textarea and button styles to inherit the font from their parent elements, ensuring consistent typography across the application. The textarea is styled with padding, border, border-radius, background color, and text color based on the current theme. */
+textarea,
+button {
+    font: inherit;
+}
+
+textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    background-color: var(--background);
+    color: var(--foreground);
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+/* button styles for the submit button, including background color, text color, border, padding, and border-radius. The button uses CSS variables to adapt to the current theme. */
+button[type="submit"] {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: 1px solid var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin-right: 0.5rem;
+
+}
+
+button:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
