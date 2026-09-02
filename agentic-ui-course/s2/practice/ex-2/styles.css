@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+}
+
+.field {
+    display: block;
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input {
+    width: 50%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.33rem;
+}
+
+/*  focus-visible is a pseudo-class that applies styles to an element when it receives focus via keyboard navigation, but not when it is clicked with a mouse. This helps improve accessibility by providing visual feedback for keyboard users. */
+input:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}

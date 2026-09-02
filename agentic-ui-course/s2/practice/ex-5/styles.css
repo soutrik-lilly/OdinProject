@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+}
+
+nav button {
+    display: block;
+    width: 30%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: grabbing;
+    border-radius: 0.5rem;
+    border: 0.25px solid #4e5660;
+}
+
+nav button:hover {
+    background-color: #dec3d7;
+}
+
+nav button[data-active="true"] {
+    background-color: #b6cae3;
+    font-weight: 600;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav li {
+    margin-bottom: 0.5rem;
+}

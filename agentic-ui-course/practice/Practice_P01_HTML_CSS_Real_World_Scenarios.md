@@ -80,6 +80,46 @@ Recruiters, screen readers, and search engine crawlers all read *structure* befo
 4. An unordered list of 3 skills inside one section.
 5. `<footer>` with a copyright line.
 
+### What We're Building — the Component List
+
+| # | Component | Element | Traces to |
+|---|---|---|---|
+| 1 | Name banner | `header` > `h1` + `p` | S01 §6 |
+| 2 | Background section | `main` > `section` > `h2` + `p` | S01 §6 |
+| 3 | Skills section | `main` > `section` > `h2` + `ul` | S01 §6, §7 |
+| 4 | Copyright line | `footer` > `p` | S01 §6 |
+
+### How It Should Look
+
+No CSS layout tool exists yet at this point in the syllabus — every block-level element simply stacks top-to-bottom in normal document flow, in source order.
+
+```text
+┌──────────────────────────────┐
+│ Soutrik                        │  ← header
+│ Backend engineer moving into   │
+│ full-stack UI work.            │
+├──────────────────────────────┤
+│ Background                     │  ← section 1
+│ Python/FastAPI engineer...     │
+├──────────────────────────────┤
+│ Skills                         │  ← section 2
+│ • Python & FastAPI              │
+│ • Semantic HTML5                │
+│ • CSS custom properties...      │
+├──────────────────────────────┤
+│ © 2026 Soutrik. All rights...  │  ← footer
+└──────────────────────────────┘
+```
+
+### Step-by-Step Build Order
+
+1. Write the skeleton: `<!DOCTYPE html>` → `<html lang="en">` → `<head>` → `<body>`.
+2. Add `<header>` with your `<h1>` name and a one-line tagline.
+3. Add `<main>` with the first `<section>` (`<h2>Background</h2>` + a paragraph).
+4. Add the second `<section>` inside the same `<main>` (`<h2>Skills</h2>` + a 3-item `<ul>`).
+5. Add `<footer>` with the copyright paragraph.
+6. Link `styles.css` and add only the two rules shown below — nothing more yet.
+
 ### Code
 
 ```html
@@ -172,6 +212,47 @@ S01 §12 names this directly: enterprise software under Section 508 / WCAG 2.1 A
 3. `required` on all three; `type="email"` on email; `minlength="8"` on password.
 4. Add an icon-only "clear form" button using `aria-label`.
 
+### What We're Building — the Component List
+
+| # | Component | Element | Traces to |
+|---|---|---|---|
+| 1 | Page title | `main` > `h1` | S01 §6 |
+| 2 | Name field | `.field` > `label for` + `input type="text"` | S01 §8 |
+| 3 | Email field | `.field` > `label for` + `input type="email"` | S01 §8 |
+| 4 | Password field | `.field` > `label for` + `input type="password"` | S01 §8 |
+| 5 | Submit button | `button type="submit"` | S01 §7 |
+| 6 | Icon-only clear button | `button type="button" aria-label` | S01 §9 |
+
+### How It Should Look
+
+Each `.field` div is `display: block`, so the three fields stack vertically. The two `<button>` elements are the form's last two children — with no layout tool applied yet, they render side-by-side inline, in source order.
+
+```text
+┌──────────────────────────────┐
+│ Create your BIA account        │  ← h1
+├──────────────────────────────┤
+│ Full name                      │  ← label
+│ [______________________]       │  ← input, width:100%
+├──────────────────────────────┤
+│ Email                          │
+│ [______________________]       │
+├──────────────────────────────┤
+│ Password                       │
+│ [______________________]       │
+├──────────────────────────────┤
+│ [Create account]  🗑           │  ← two buttons, inline, same line
+└──────────────────────────────┘
+```
+
+### Step-by-Step Build Order
+
+1. Add `<main>` with an `<h1>` and an empty `<form>`.
+2. Build the name field first: a `.field` div containing `<label for="full-name">` + `<input id="full-name" required minlength="2">`. Confirm the `for`/`id` pair matches exactly.
+3. Copy the pattern for email (`type="email"`) and password (`type="password" minlength="8"`).
+4. Add the submit button (`<button type="submit">Create account</button>`).
+5. Add the icon-only clear button last, with `type="button"` (never `submit`) and `aria-label="Clear form"`.
+6. Add the CSS: box-sizing reset, `.field` spacing, `input` sizing, and the `:focus-visible` ring — in that order.
+
 ### Code
 
 ```html
@@ -262,6 +343,35 @@ S01 §7 is explicit: tables misused for layout produce a "confusing, meaningless
 3. `<tbody>` rows, each with a `<th scope="row">` for the plan name.
 4. CSS: border on cells, `rem` padding, hover highlight.
 
+### What We're Building — the Component List
+
+| # | Component | Element | Traces to |
+|---|---|---|---|
+| 1 | Table name | `caption` | S01 §7 |
+| 2 | Column headers | `thead` > `tr` > `th scope="col"` × 3 | S01 §7 |
+| 3 | Plan rows | `tbody` > `tr` > `th scope="row"` + `td` × 2 | S01 §7 |
+
+### How It Should Look
+
+A `<table>` lays out its own rows and columns natively — this is the one scenario in the syllabus so far where the browser's built-in layout algorithm, not CSS you write, does the column alignment.
+
+```text
+┌──────────┬────────────────────┬──────────┐
+│ Plan     │ Messages / month   │ Price    │  ← thead (bold, bordered)
+├──────────┼────────────────────┼──────────┤
+│ Free     │ 100                │ $0       │  ← tbody row 1
+├──────────┼────────────────────┼──────────┤
+│ Pro      │ 10,000             │ $29/mo   │  ← tbody row 2, hover → light gray
+└──────────┴────────────────────┴──────────┘
+```
+
+### Step-by-Step Build Order
+
+1. Start with `<table>` and its `<caption>BIA Plan Comparison</caption>` — caption comes first, immediately inside the table.
+2. Add `<thead>` with one `<tr>` of three `<th scope="col">` cells.
+3. Add `<tbody>` with one `<tr>` per plan, `<th scope="row">` for the plan name, `<td>` for the two data cells.
+4. Add the CSS: `border-collapse: collapse`, bordered/padded cells, then the `tbody tr:hover` rule last.
+
 ### Code
 
 ```html
@@ -343,6 +453,41 @@ S02 §9 states this plainly: specificity confusion is one of the most common sou
 3. Compute the specificity by hand before checking in DevTools.
 4. Fix the width bug caused by missing `box-sizing`.
 
+### What We're Building — the Component List
+
+| # | Component | Element | Traces to |
+|---|---|---|---|
+| 1 | Wrapper | `.grid` (a plain `div` — no layout property set on it yet) | S02 §3 |
+| 2 | Featured card | `.card#card-featured` | S02 §3.2, §4 |
+| 3 | Two plain cards | `.card` × 2 | S02 §4 |
+
+### How It Should Look
+
+The wrapper is named `.grid`, but nothing sets `display: grid` or `display: flex` on it yet — that's deliberate, this is S01/S02 content only. So, despite the name, the three `.card` divs are plain block elements and stack **vertically**, full width, one under another.
+
+```text
+┌──────────────────────────────┐
+│ Streaming Responses            │  ← .card#card-featured
+│ See tokens arrive in real time.│     (background color = the bug)
+├──────────────────────────────┤
+│ Dark Mode                      │  ← .card
+│ One class toggles the entire.. │
+├──────────────────────────────┤
+│ Accessible by Default          │  ← .card
+│ Built on semantic HTML...      │
+└──────────────────────────────┘
+   ↑ "  .grid " in the name is aspirational — S03 is what
+     actually makes these sit side by side.
+```
+
+### Step-by-Step Build Order
+
+1. Build the three `.card` divs inside one `.grid` wrapper — give only the first card `id="card-featured"`.
+2. Write the base `.card` rule: fixed width, padding, border, radius, shadow.
+3. Add the three conflicting background-color rules exactly as shown, in the order shown — order matters for the lesson.
+4. **Stop. Predict** which color wins by computing each selector's `(A, B, C)` by hand (see below) *before* reloading the browser.
+5. Reload, confirm your prediction in DevTools, then do the two-part debugging exercise in "Do This Yourself."
+
 ### Code (the buggy version — build this first)
 
 ```html
@@ -421,6 +566,39 @@ S01 §5 states this outright: this is the *exact* mechanism Radix UI (underneath
 1. `<header>`, `<nav aria-label="Sidebar">`, `<main>`.
 2. Sidebar items are real `<button type="button">`s, each carrying `data-active="true"` on exactly one.
 3. CSS targets `[data-active="true"]` directly — no class needed, no JS needed yet.
+
+### What We're Building — the Component List
+
+| # | Component | Element | Traces to |
+|---|---|---|---|
+| 1 | Header bar | `header` > `h1` | S01 §6 |
+| 2 | Sidebar | `nav aria-label="Sidebar"` > `ul` of `button` | S01 §5, §6, §7 |
+| 3 | Main content | `main` > `h2` + `p` | S01 §6 |
+
+### How It Should Look
+
+`header`, `nav`, and `main` are all block-level landmarks with no layout tool applied — they stack vertically, in source order. The "sidebar" is a full-width band above the main content at this point in the syllabus, not a true side-by-side sidebar yet.
+
+```text
+┌──────────────────────────────┐
+│ BIA Dashboard                  │  ← header
+├──────────────────────────────┤
+│ Conversations   (highlighted)  │  ← nav — full-width for now
+│ Usage Analytics                │     (S03 moves it beside main)
+│ Settings                       │
+├──────────────────────────────┤
+│ Conversations                  │  ← main
+│ Select a conversation from...  │
+└──────────────────────────────┘
+```
+
+### Step-by-Step Build Order
+
+1. Add `<header>` with the `<h1>BIA Dashboard</h1>`.
+2. Add `<nav aria-label="Sidebar">` with a `<ul>` of three `<li><button type="button">…</button></li>` items.
+3. Put `data-active="true"` on exactly one button — "Conversations."
+4. Add `<main>` with an `<h2>` and a placeholder paragraph.
+5. Write the CSS in this order: box-sizing reset → base `nav button` styles → `:hover` → `[data-active="true"]` last, so it visibly overrides the base style.
 
 ### Code
 
@@ -501,6 +679,39 @@ S02 §9: this mechanism is instantaneous (browser cascade, not JS re-render) and
 3. Every component (reuse Scenario 5's CSS) references `var(--name)`, never a literal hex code.
 4. Add `--focus-ring-color`, themed independently in each mode.
 
+### What We're Building — the Component List
+
+| # | Component | Element | Traces to |
+|---|---|---|---|
+| 1 | Token declarations | `:root { --name: value; }` | S02 §6 |
+| 2 | Dark-mode overrides | `.dark { --name: value; }` (same names) | S02 §6 |
+| 3 | High-contrast overrides | `.high-contrast { --name: value; }` (same names) | S02 §6 |
+| 4 | Themed components | Scenario 5's `body`, `nav button[data-active]`, `:focus-visible` — unchanged, now reading `var(--name)` | S02 §6 |
+
+### How It Should Look
+
+The *shape* on screen is identical to Scenario 5 — same header, sidebar, main. What changes is only color, driven by which class sits on `<html>`. Three color states of the same shell:
+
+```text
+Light (default)          Dark (.dark)              High-contrast (.high-contrast)
+┌────────────┐           ┌────────────┐             ┌────────────┐
+│ white bg    │           │ near-black  │             │ pure black  │
+│ dark text   │           │ light text  │             │ white text  │
+│ blue active │           │ slate active│             │ yellow ring │
+└────────────┘           └────────────┘             └────────────┘
+        same HTML structure, same component CSS — only the
+        class on <html> and the :root/.dark/.high-contrast
+        variable blocks differ.
+```
+
+### Step-by-Step Build Order
+
+1. Take Scenario 5's HTML unchanged — do not touch `header`/`nav`/`main` markup at all.
+2. Declare every color Scenario 5 used as a `--variable` inside `:root`, with light-mode values.
+3. Copy the same variable *names* into a `.dark { }` block with dark values, then into a `.high-contrast { }` block with high-contrast values.
+4. Go back through Scenario 5's CSS rules and replace every literal hex color with `var(--name)`.
+5. Add `class="dark"` to `<html>` and confirm the whole shell re-colors with zero other edits.
+
 ### Code
 
 ```css
@@ -574,6 +785,57 @@ This is the exact deliverable a take-home assignment or a first sprint ticket at
 Everything above, plus:
 - `aria-live="polite"` on the message region — S01 §9
 - Full theme system wired to a real component tree — S02 §6, §8
+
+### What We're Building — the Component List
+
+| # | Component | Traces back to | Key concept |
+|---|---|---|---|
+| 1 | Header bar (sidebar-toggle button + title) | Scenario 5's header/button pattern | `<button aria-label>`, S01 §7/§9 |
+| 2 | Chat-history sidebar (`nav` + `data-active` buttons) | Scenario 5, verbatim | `data-*` attribute selectors, S01 §5 / S02 §7 |
+| 3 | Conversation region (`#message-list`, `aria-live`) | New — S01 §9's live-region rule, applied for the first time | `aria-live="polite"` |
+| 4 | Message form (label + textarea + Send + Stop) | Scenario 2's accessible-form pattern, adapted | `<label for>`, native validation, icon-only `aria-label` buttons |
+| 5 | Footer copyright | Scenario 1, verbatim | Landmark semantics, S01 §6 |
+| 6 | Theme variables (`:root` / `.dark`) | Scenario 6, extended with two more tokens (`--primary`, `--border`) | Custom properties, S02 §6 |
+
+Six components, four of which are *reused outright* from earlier scenarios rather than rebuilt — that reuse is the point: a real capstone assembles existing, already-tested pieces, it doesn't start from a blank file.
+
+### How It Should Look
+
+No Flexbox or Grid exists yet in this syllabus (that's S03) — so, honestly, the regions stack top-to-bottom in normal document flow. This is deliberate, not a limitation to hide: it's exactly what the Bridge Forward section below calls out as the thing S03 will change next.
+
+```text
+┌────────────────────────────────────────┐
+│ ☰   BIA Assistant                      │  ← header
+├────────────────────────────────────────┤
+│ Chat History                           │  ← nav (sidebar) — full-width,
+│  • Kubernetes manifest question        │     stacked ABOVE main because
+│  • Drizzle schema design               │     no layout tool exists yet
+├────────────────────────────────────────┤
+│ Conversation                           │  ← main
+│ ┌─────────────────────────────────┐   │
+│ │ You: How do I center a fixed-... │   │  ← #message-list
+│ │ Assistant: margin: 0 auto ...    │   │     (aria-live="polite")
+│ └─────────────────────────────────┘   │
+│ [ Your message textarea           ]   │
+│ [ Send ]   [ Stop ]                    │
+├────────────────────────────────────────┤
+│ © 2026 BIA Unified Intelligence Plat.  │  ← footer
+└────────────────────────────────────────┘
+```
+
+### Step-by-Step Build Order
+
+Build outside-in, exactly like every prior scenario: skeleton and landmarks first, content and interactivity second, theme last (theme is the one layer allowed to come last precisely *because* every component below only ever references a variable name, never a literal color — that's Scenario 6's entire payoff).
+
+1. **Skeleton.** `<!DOCTYPE html>` → `<html lang="en" class="dark">` → `<head>` (charset, viewport, title, stylesheet link) → `<body>`.
+2. **Header.** One `<header>` with the sidebar-toggle `<button aria-label="Toggle chat history sidebar">` and an `<h1>`.
+3. **Sidebar.** `<nav aria-label="Chat history">`, an `<h2>`, and a `<ul>` of real `<button type="button">`s — reuse Scenario 5's markup exactly, mark exactly one with `data-active="true"`.
+4. **Main region skeleton.** `<main>` with an `<h2>Conversation</h2>` and an empty `<div aria-live="polite" id="message-list">`.
+5. **Seed the conversation.** Add two `<p>` lines inside `#message-list` — a user line and an assistant line — so there's something for `aria-live` to have already announced once, before any real streaming exists.
+6. **Message form.** Reuse Scenario 2's label/input pattern, but swap the `<input>` for a `<textarea>`; add a submit `Send` button and an icon-only `Stop` button with `aria-label="Stop generating response"`, `type="button"` so it can never submit the form.
+7. **Footer.** One `<footer>` with the copyright line, reused verbatim from Scenario 1.
+8. **Wire the theme.** Copy Scenario 6's `:root`/`.dark` blocks in, add the two new tokens this capstone needs (`--primary`, `--border`), then point every component's CSS at `var(--name)` — never a literal hex value.
+9. **Verify**, per the Do This Yourself steps below, before calling this done.
 
 ### Code
 

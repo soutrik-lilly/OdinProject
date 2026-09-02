@@ -104,6 +104,30 @@ Logo pinned left, nav links grouped in the middle, a CTA button pinned right —
 ### Decision reasoning
 **One dimension** (a single horizontal line) and **content-out** (the number of nav links is small and known, but their combined width isn't fixed) → Flexbox, per Question 1 and 2. This is a textbook Cluster/Sidebar hybrid: three distinct groups distributed along one axis.
 
+### What We're Building — the Component List
+
+| # | Component | Element | Role in the Flex row |
+|---|---|---|---|
+| 1 | Logo | `.logo` | Left-pinned, fixed content |
+| 2 | Nav links | `.nav-links` (nested flex container) | Middle group — its own Cluster, nested inside the outer Sidebar-style row |
+| 3 | CTA button | `.cta` | Right-pinned |
+
+### How It Should Look
+
+```text
+┌──────────────────────────────────────────────┐
+│ BIA     Product   Pricing   Docs   [Sign in] │
+└──────────────────────────────────────────────┘
+  ↑logo    ↑── nav-links cluster ──↑    ↑CTA
+```
+
+### Step-by-Step Build Order
+
+1. Write the flat markup first: `<nav class="navbar">` containing the logo `<div>`, the `<ul class="nav-links">`, and the CTA `<button>` — three siblings, no wrapper divs.
+2. Make `.navbar` the flex container: `display: flex; align-items: center; justify-content: space-between;`.
+3. Make `.nav-links` its own nested flex container (`display: flex; gap: 1.5rem;`) so the three links space themselves without affecting the outer row.
+4. Verify in the browser: shrink the window and confirm the row behaves per Question 1/2's content-out logic before moving on.
+
 ### Code
 
 ```html
@@ -152,6 +176,35 @@ A page whose content is sometimes short and sometimes long, but the footer must 
 ### Decision reasoning
 This is a **column of exactly three regions, stacked** — one dimension. Content-out: `main` should absorb however much space is left, whatever its content height turns out to be. Textbook Stack, with one child told to grow.
 
+### What We're Building — the Component List
+
+| # | Component | Role |
+|---|---|---|
+| 1 | `header` | Fixed natural height, top of the column |
+| 2 | `main` | `flex: 1` — absorbs all leftover vertical space, whatever it turns out to be |
+| 3 | `footer` | Fixed natural height, always immediately after `main`, never floating |
+
+### How It Should Look
+
+```text
+┌───────────────────┐
+│ header             │
+├───────────────────┤
+│ main                │  ← flex: 1, grows or shrinks
+│ (however tall its   │     to fill whatever's left
+│  content is)         │
+├───────────────────┤
+│ footer              │  ← always right after main,
+└───────────────────┘     never floating mid-screen
+```
+
+### Step-by-Step Build Order
+
+1. Wrap the three regions in one container: `<div class="page">` with `<header>`, `<main>`, `<footer>` as direct children.
+2. Make `.page` the flex column: `display: flex; flex-direction: column; min-height: 100dvh;`.
+3. Give `main { flex: 1; }` — the one line that does the entire job.
+4. Verify with two content states: a one-line page (footer should sit at the viewport bottom) and a 40-paragraph page (footer should sit at the true end of content, page scrolling normally).
+
 ### Code
 
 ```css
@@ -183,6 +236,32 @@ Product listings, blog post grids, a dashboard's metric tiles — "N cards, howe
 ### Decision reasoning
 **Two dimensions** — rows *and* columns need to reflow together as the viewport changes — and the number of items is unpredictable, which is exactly the case Grid's `auto-fit`/`auto-fill` machinery exists for. This is also a case where reaching for Flexbox would immediately trigger Question 3's warning sign: you'd need explicit widths and `flex-wrap` fighting to fake what Grid does natively.
 
+### What We're Building — the Component List
+
+| # | Component | Role |
+|---|---|---|
+| 1 | `.card-grid` | The single Grid container — owns 100% of the responsive logic |
+| 2 | `.card` (× however many) | Passive children — no width, no media query, no per-card CSS at all |
+
+### How It Should Look
+
+```text
+Narrow viewport (1 col)     Medium (2 col)              Wide (4 col)
+┌────────┐                  ┌────────┐┌────────┐        ┌───┐┌───┐┌───┐┌───┐
+│ Card 1 │                  │ Card 1 ││ Card 2 │        │ 1 ││ 2 ││ 3 ││ 4 │
+├────────┤                  ├────────┤├────────┤        └───┘└───┘└───┘└───┘
+│ Card 2 │                  │ Card 3 ││ Card 4 │
+└────────┘                  └────────┘└────────┘
+        same HTML, same CSS — zero @media queries anywhere
+```
+
+### Step-by-Step Build Order
+
+1. Write the container and however many `.card` children you need — flat markup, no per-card wrapper or sizing attributes.
+2. Apply the single rule to the container: `display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;`.
+3. Resize the browser from very narrow to very wide and watch the column count change on its own.
+4. Add or remove cards and confirm the grid reflows without touching a single line of CSS.
+
 ### Code
 
 ```css
@@ -209,6 +288,35 @@ Nearly every admin panel, analytics tool, and the BIA app itself: header across 
 
 ### Decision reasoning
 Rows *and* columns, planned together, with a known shape decided before content exists — the purest possible case of MDN's "layout-in" description. This is also the layout where naming areas (instead of counting grid lines) becomes a real maintainability win, not a novelty.
+
+### What We're Building — the Component List
+
+| # | Component | `grid-area` | Role |
+|---|---|---|---|
+| 1 | `header` | `header` | Spans both columns, top row |
+| 2 | `nav` (sidebar) | `sidebar` | Fixed 220px column |
+| 3 | `main` | `main` | Fluid `1fr` column, absorbs remaining width |
+| 4 | `footer` | `footer` | Spans both columns, bottom row |
+
+### How It Should Look
+
+```text
+┌─────────────────────────────┐
+│           header             │
+├───────────┬───────────────────┤
+│  sidebar   │       main        │
+│  (220px)   │      (1fr)         │
+├───────────┴───────────────────┤
+│           footer             │
+└─────────────────────────────┘
+```
+
+### Step-by-Step Build Order
+
+1. Draw the shape as a `grid-template-areas` string first — literally write the ASCII map (`"header header"` / `"sidebar main"` / `"footer footer"`) before anything else, so the shape exists before content does.
+2. Add `grid-template-columns: 220px 1fr;` and `grid-template-rows: auto 1fr auto;` to size the tracks the areas reference.
+3. Assign `grid-area` to each of the four direct children (`header`, `nav`, `main`, `footer`).
+4. Verify: delete the sidebar row from the area string entirely and confirm the layout collapses to two full-width regions without touching `grid-template-columns`.
 
 ### Code
 
@@ -247,6 +355,31 @@ An avatar next to a name and message, a comment with a profile picture, a produc
 
 ### Decision reasoning
 One dimension (a fixed-width image, an flexible-width text block, side by side) — a Sidebar pattern by another name. Content-out: the text block's height is whatever the message needs; the image never changes size regardless.
+
+### What We're Building — the Component List
+
+| # | Component | Role |
+|---|---|---|
+| 1 | `.avatar` | Fixed 40×40px, `flex-shrink: 0` — never shrinks, never stretches |
+| 2 | `.message-content` | `flex: 1` — absorbs all remaining width, height driven purely by its own text |
+
+### How It Should Look
+
+```text
+┌────┐  Soutrik
+│ 👤 │  How do I center this without Grid?
+└────┘
+ ↑fixed 40×40,        ↑fluid, wraps freely,
+  flex-shrink:0         height = however tall the text is
+```
+
+### Step-by-Step Build Order
+
+1. Write the flat markup: `.message-row` containing an `<img class="avatar">` and a `.message-content` div (name + paragraph) as siblings.
+2. Make `.message-row` the flex container: `display: flex; align-items: flex-start; gap: 0.75rem;`.
+3. Lock the avatar's size: `flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;`.
+4. Let the text absorb the rest: `.message-content { flex: 1; }`.
+5. Verify: paste a long, multi-line message and confirm the avatar stays pinned at the top, unchanged in size.
 
 ### Code
 
@@ -296,6 +429,35 @@ Header, footer, and three middle columns (left nav, main content, right rail) �
 ### Decision reasoning
 The outer shape (header/middle-row/footer, with the middle row split into three columns) is genuinely two-dimensional → Grid. Each individual column's *internal* content, though, is usually a simple vertical stack → Flexbox nested inside, exactly the composition principle S03 §3 names directly ("Grid for the shell, Flexbox for what's inside a cell").
 
+### What We're Building — the Component List
+
+| # | Component | Tool | Role |
+|---|---|---|---|
+| 1 | Outer shell (`header`/`nav`/`main`/`aside`/`footer`) | Grid | 2D — header and footer span all three columns; the middle row splits into three |
+| 2 | `nav` internals (the link list) | Flexbox (nested Stack) | 1D — a simple vertical list, doesn't need Grid's power |
+| 3 | `main`, `aside` | Grid areas | Passive content regions, no special internal layout needed for this exercise |
+
+### How It Should Look
+
+```text
+┌─────────────────────────────────┐
+│              header              │
+├────────┬───────────────┬────────┤
+│  nav   │     main       │ aside  │
+│ (200px)│     (1fr)       │(200px) │
+├────────┴───────────────┴────────┤
+│              footer              │
+└─────────────────────────────────┘
+```
+
+### Step-by-Step Build Order
+
+1. Write the outer `.holy-grail` container with all five children (`header`, `nav`, `main`, `aside`, `footer`) as flat siblings.
+2. Apply the Grid shell: `grid-template-columns: 200px 1fr 200px; grid-template-rows: auto 1fr auto;` plus the `grid-template-areas` map.
+3. Assign `grid-area` to `nav`, `main`, `aside` (header/footer already span by default row placement, or assign them explicitly too).
+4. Nest a Flexbox Stack *only* inside `nav`: `display: flex; flex-direction: column; gap: 0.5rem;` — resist the urge to make this Grid too.
+5. Verify: change `grid-template-columns` to `1fr 3fr 1fr` and predict the new pixel widths on a 1000px viewport before reloading.
+
 ### Code
 
 ```css
@@ -338,6 +500,29 @@ Netflix's row of thumbnails, an e-commerce "related products" carousel, Instagra
 ### Decision reasoning
 One dimension, explicitly *not* wrapping — this is a case where you actively want `flex-wrap`'s default `nowrap` behavior (S03 §2) instead of fighting it, combined with horizontal scrolling instead of shrinking.
 
+### What We're Building — the Component List
+
+| # | Component | Role |
+|---|---|---|
+| 1 | `.reel` | Non-wrapping Flex row + `overflow-x: auto` — the scrolling mechanism |
+| 2 | `.reel > *` (each item) | Fixed-width, `flex-shrink: 0`, with `scroll-snap-align` |
+
+### How It Should Look
+
+```text
+┌───┐┌───┐┌───┐┌───┐┌───┐┌╌╌╌  (scrolls further →)
+│ 1 ││ 2 ││ 3 ││ 4 ││ 5 │
+└───┘└───┘└───┘└───┘└───┘
+ ↑ all fixed-width, flex-shrink:0 — container becomes scrollable instead of wrapping or shrinking
+```
+
+### Step-by-Step Build Order
+
+1. Write `.reel` containing N fixed-width child elements as flat siblings.
+2. Apply `display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory;` to the container.
+3. Lock each child: `flex-shrink: 0; width: 200px; scroll-snap-align: start;`.
+4. Verify with 10 placeholder items: confirm the row scrolls horizontally instead of wrapping to new lines — the deliberate opposite of Pattern 1's navbar behavior.
+
 ### Code
 
 ```css
@@ -373,6 +558,34 @@ Apple's product marketing pages, Pinterest-style boards, a "featured + 4 smaller
 
 ### Decision reasoning
 Two dimensions, and specifically **irregular spans** — some cells are bigger than others by design, which only Grid can express (`repeat(auto-fit, minmax())` alone gives you *uniform* responsive tiles; a Bento layout needs individual cells to deliberately break that uniformity).
+
+### What We're Building — the Component List
+
+| # | Component | Span | Role |
+|---|---|---|---|
+| 1 | `.featured` | `grid-column: span 2; grid-row: span 2;` | Large 2×2 hero tile |
+| 2 | `.wide` | `grid-column: span 2;` | Medium 2×1 tile |
+| 3 | Remaining tiles | none (implicit 1×1) | Auto-placed by Grid around the spanning tiles |
+
+### How It Should Look
+
+```text
+┌───────────────┬───────┐
+│               │   B   │
+│   FEATURED    ├───────┤
+│   (2×2 span)  │   C   │
+├───────┬───────┼───────┤
+│  WIDE (2×1 span)│  D  │
+└───────┴───────┴───────┘
+```
+
+### Step-by-Step Build Order
+
+1. Write the container with 6 flat child tiles — one marked `.featured`, one marked `.wide`, four unmarked.
+2. Apply `display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 200px); gap: 1rem;` to the container.
+3. Add `grid-column: span 2; grid-row: span 2;` to `.featured` only.
+4. Add `grid-column: span 2;` to `.wide` only.
+5. Leave the remaining four tiles untouched and confirm they auto-place themselves around the two spanning tiles.
 
 ### Code
 
@@ -411,6 +624,29 @@ A settings form with several label/input pairs stacked vertically, where every l
 ### Decision reasoning
 This is the sharpest possible illustration of Question 3's warning sign. With Flexbox, each label/input pair is its *own separate flex container* — so there is no way for one row's label width to influence another row's label width; you'd have to measure the longest label manually and hard-code a `width`. Grid solves this natively: **columns are shared across every row of the grid**, by definition.
 
+### What We're Building — the Component List
+
+| # | Component | Grid column | Role |
+|---|---|---|---|
+| 1 | Labels (× 3) | Column 1 (`auto`) | Width driven by the single widest label, shared across every row |
+| 2 | Inputs / textarea (× 3) | Column 2 (`1fr`) | Fluid, absorbs remaining width |
+
+### How It Should Look
+
+```text
+Name                     [__________________]
+Email address            [__________________]
+Message                  [__________________]
+ ↑ column 1: auto           ↑ column 2: 1fr
+   (width = widest label, shared by ALL rows — not per-row)
+```
+
+### Step-by-Step Build Order
+
+1. Write the form as one flat `<form class="aligned-form">` — label, input, label, input, label, textarea — **no wrapper `<div>` per row**; that flatness is what lets them all belong to the same grid.
+2. Apply `display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem; align-items: center;` to `.aligned-form`.
+3. Verify: lengthen one label's text and confirm the *entire* first column widens together, across every row, with zero CSS changes.
+
 ### Code
 
 ```html
@@ -444,7 +680,263 @@ Change "Email address" to something much longer ("Preferred contact email addres
 
 ---
 
-## 12. Quick-Reference: Signal → Tool
+## 12. Capstone — Build the BIA Dashboard Shell
+
+Nine isolated patterns prove you understand each tool in isolation. The real industry skill is *composing* several of them into one working page without getting confused about which container is whose. This capstone does that — it's the direct forerunner of the S04 build the Bridge Forward section already points to.
+
+### Objective
+
+Build one real, working page — a BIA analytics dashboard with an embedded assistant chat panel — that composes **five** of the nine patterns above into a single DOM tree: the app shell (Pattern 6), the navbar (Pattern 1), the sidebar (Pattern 2's Stack), a suggested-actions rail (Pattern 7's Reel), a metric card grid (Pattern 3), and a chat log (Pattern 5's media object, itself stacked with Pattern 2). Nothing here is new CSS — the entire exercise is deciding *which already-learned pattern* each region needs, then not letting the containers bleed into each other.
+
+### What We're Building — the Component List
+
+| # | Component | Pattern used | Tool |
+|---|---|---|---|
+| 1 | Outer page shell (navbar / sidebar / main / footer regions) | Pattern 6, simplified to 2 columns | Grid |
+| 2 | Top navbar (logo, links, sign-out) | Pattern 1 | Flexbox |
+| 3 | Left sidebar nav (4 stacked links) | Pattern 2 (Stack) | Flexbox |
+| 4 | Suggested-actions chip rail | Pattern 7 (Reel) | Flexbox |
+| 5 | Metric card grid (4 KPI tiles, responsive) | Pattern 3 | Grid |
+| 6 | Assistant chat log (stacked message rows) | Pattern 5 (media object) + Stack | Flexbox |
+| 7 | Footer status bar | Pattern 2's sticky-footer principle | Flexbox |
+
+### How It Should Look
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ BIA   Overview  Reports  Settings              [Sign out]    │  ← navbar (Flexbox)
+├───────────┬────────────────────────────────────────────────────┤
+│ Dashboard │  (Summarize) (Draft email) (Compare) (Explain) ›  │  ← reel, scrolls →
+│ Convos    ├────────────────────────────────────────────────────┤
+│ Knowledge │  ┌──────────┐┌──────────┐┌──────────┐┌──────────┐  │
+│ Integr.   │  │ Active   ││ Open     ││ Avg Resp ││ Satisf.  │  │  ← metric grid
+│           │  │ Users    ││ Tickets  ││ Time     ││          │  │     (auto-fit)
+│ (sidebar  │  │ 12,480   ││ 37       ││ 2m 14s   ││ 94%      │  │
+│  = Stack) │  └──────────┘└──────────┘└──────────┘└──────────┘  │
+│           ├────────────────────────────────────────────────────┤
+│           │  ◯ You: Why did open tickets spike this week?     │  ← chat log
+│           │  ◯ BIA: Rose 18% after Tuesday's release...       │     (media object
+│           │                                                     │      + Stack)
+├───────────┴────────────────────────────────────────────────────┤
+│ Connected                                              v2.4.1  │  ← footer
+└──────────────────────────────────────────────────────────────┘
+```
+
+Left sidebar is a fixed 220px dark column; everything else is fluid. The reel scrolls horizontally if the chips overflow; the metric grid reflows from 4 columns down to 1 as the viewport narrows, with zero breakpoints; the chat log grows downward and the whole `main` region scrolls independently of the fixed navbar/sidebar/footer.
+
+### Step-by-Step Build Order
+
+Build outside-in — shell first, then fill each region. Building inside-out (chips before the shell exists) is the most common source of "why is my layout broken" confusion, because you end up debugging a component's CSS against no actual container.
+
+1. **Lay the outer Grid shell first, with nothing inside it yet.** Three named rows (`navbar`, `body`, `footer`) and two named columns (`sidebar`, `main`). Verify the four empty colored boxes look right before writing a single line of inner content — this isolates shell bugs from content bugs.
+2. **Fill the navbar** as a Flexbox row (Pattern 1) — logo, links, button, `justify-content: space-between`.
+3. **Fill the sidebar** as a Flexbox column (Pattern 2's Stack) — one link per row, `gap` for spacing, no `justify-content` needed since it's top-aligned by default.
+4. **Turn `main` itself into a vertical Flexbox stack** (three stacked sections: reel, metric grid, chat log) — this is the container that makes the three inner components sit one above another with consistent spacing.
+5. **Build the reel** (Pattern 7) inside `main`'s first section — `overflow-x: auto`, `flex-shrink: 0` on each chip.
+6. **Build the metric grid** (Pattern 3) inside `main`'s second section — `repeat(auto-fit, minmax(180px, 1fr))`.
+7. **Build the chat log** (Pattern 5, repeated) inside `main`'s third section — each message row is its own small Flexbox media object; the log itself is a Flexbox Stack of those rows.
+8. **Fill the footer** — a simple Flexbox row, `justify-content: space-between`, for the two status strings.
+9. **Verify in the browser**: resize narrow → confirm the metric grid drops to fewer columns and the reel starts scrolling instead of wrapping; scroll `main` → confirm the navbar, sidebar, and footer stay fixed while only `main`'s content moves.
+
+### Code
+
+```html
+<div class="app-shell">
+  <header class="app-shell__navbar">
+    <div class="logo">BIA</div>
+    <ul class="nav-links">
+      <li><a href="#">Overview</a></li>
+      <li><a href="#">Reports</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+    <button type="button" class="cta">Sign out</button>
+  </header>
+
+  <nav class="app-shell__sidebar">
+    <a href="#" class="sidebar-link active">Dashboard</a>
+    <a href="#" class="sidebar-link">Conversations</a>
+    <a href="#" class="sidebar-link">Knowledge Base</a>
+    <a href="#" class="sidebar-link">Integrations</a>
+  </nav>
+
+  <main class="app-shell__main">
+    <section class="reel" aria-label="Suggested actions">
+      <button type="button" class="chip">Summarize last quarter</button>
+      <button type="button" class="chip">Draft follow-up email</button>
+      <button type="button" class="chip">Compare regional sales</button>
+      <button type="button" class="chip">Explain this metric</button>
+      <button type="button" class="chip">Export as report</button>
+    </section>
+
+    <section class="metric-grid" aria-label="Key metrics">
+      <article class="metric-card">
+        <p class="metric-label">Active Users</p>
+        <p class="metric-value">12,480</p>
+      </article>
+      <article class="metric-card">
+        <p class="metric-label">Open Tickets</p>
+        <p class="metric-value">37</p>
+      </article>
+      <article class="metric-card">
+        <p class="metric-label">Avg. Response Time</p>
+        <p class="metric-value">2m 14s</p>
+      </article>
+      <article class="metric-card">
+        <p class="metric-label">Satisfaction</p>
+        <p class="metric-value">94%</p>
+      </article>
+    </section>
+
+    <section class="chat-log" aria-live="polite" aria-label="Assistant conversation">
+      <div class="message-row">
+        <img src="/avatar-user.png" alt="" class="avatar">
+        <div class="message-content">
+          <strong>You</strong>
+          <p>Why did open tickets spike this week?</p>
+        </div>
+      </div>
+      <div class="message-row">
+        <img src="/avatar-bot.png" alt="" class="avatar">
+        <div class="message-content">
+          <strong>BIA Assistant</strong>
+          <p>Open tickets rose 18% after Tuesday's release. Most are tagged "login-issue."</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-shell__footer">
+    <span>Connected</span>
+    <span>v2.4.1</span>
+  </footer>
+</div>
+```
+
+```css
+/* 1. Outer shell — Pattern 6, simplified to 2 columns (Grid) */
+.app-shell {
+  display: grid;
+  grid-template-areas:
+    "navbar navbar"
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
+}
+.app-shell__navbar  { grid-area: navbar; }
+.app-shell__sidebar { grid-area: sidebar; }
+.app-shell__main    { grid-area: main; }
+.app-shell__footer  { grid-area: footer; }
+
+/* 2. Navbar — Pattern 1 (Flexbox Cluster) */
+.app-shell__navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #111827;
+  color: white;
+}
+.nav-links { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+.nav-links a { color: inherit; text-decoration: none; }
+
+/* 3. Sidebar — Pattern 2 (Flexbox Stack) */
+.app-shell__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: #1f2937;
+}
+.sidebar-link {
+  color: #d1d5db;
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+}
+.sidebar-link.active { background: #374151; color: white; }
+
+/* 4. Main — a Flexbox Stack holding the three inner sections */
+.app-shell__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* 5. Suggested actions — Pattern 7 (Reel) */
+.reel {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.chip {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+}
+
+/* 6. Metric grid — Pattern 3 (Grid auto-fit) */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.metric-card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: white;
+}
+.metric-label { margin: 0 0 0.25rem; font-size: 0.875rem; color: #6b7280; }
+.metric-value { margin: 0; font-size: 1.5rem; font-weight: 700; }
+
+/* 7. Chat log — Pattern 5 media objects, stacked (Flexbox) */
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.message-row { display: flex; align-items: flex-start; gap: 0.75rem; }
+.avatar { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: #e5e7eb; }
+.message-content { flex: 1; }
+.message-content p { margin: 0.25rem 0 0; }
+
+/* 8. Footer status bar — Flexbox row */
+.app-shell__footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+  background: #111827;
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+```
+
+### Explain
+
+- The outer `.app-shell` is the **only** Grid in this entire build — every other container is Flexbox. That ratio (one Grid shell, several Flexbox regions inside it) is the Grid-outer/Flexbox-inner composition principle from Pattern 6, made concrete at full page scale instead of a two-line snippet.
+- `.app-shell__main` being `display: flex; flex-direction: column` is what lets the reel, metric grid, and chat log sit one above another with a single consistent `gap` — without it you'd be hand-managing `margin-bottom` on three unrelated sections.
+- `overflow-y: auto` on `.app-shell__main` combined with the outer grid's `min-height: 100dvh` is what keeps the navbar/sidebar/footer visually pinned while only the middle scrolls — the direct, whole-page version of the `overflow`/sticky interaction flagged as a gotcha back in Pattern 7 and in S03 §4.
+- Every class name maps to exactly one pattern number in the table above — if you can't say which pattern a class belongs to, that's the signal to re-read that pattern's section, not to guess at new CSS.
+
+### Do This Yourself
+
+1. Add a fifth metric card and confirm the grid reflows on its own — no CSS change required, because `auto-fit`/`minmax` already handles arbitrary counts (Pattern 3).
+2. Shrink the browser to a phone width and identify, out loud, which component breaks first (it's the sidebar — a fixed 220px column has no responsive behavior yet). State which S03 concept you'd reach for to fix it (a media query collapsing the sidebar, or `display: none` below a breakpoint) — you don't need to write it, just correctly name the gap, since responsive breakpoints are S03 §5 territory, not new material here.
+3. Add a third chat message with a very long paragraph and confirm the avatar in that row stays pinned at the top instead of stretching — if it doesn't, you've lost `align-items: flex-start` somewhere, which is exactly the kind of one-property regression this capstone is designed to make you notice.
+
+---
+
+## 13. Quick-Reference: Signal → Tool
 
 | If the ticket says... | Reach for | Why |
 |---|---|---|
@@ -460,7 +952,7 @@ Change "Email address" to something much longer ("Preferred contact email addres
 
 ---
 
-## 13. Common Pitfalls (Decision-Level, Not Syntax-Level)
+## 14. Common Pitfalls (Decision-Level, Not Syntax-Level)
 
 ### Pitfall 1 — Reaching for Grid everywhere "because it's more powerful"
 
@@ -488,7 +980,7 @@ Change "Email address" to something much longer ("Preferred contact email addres
 
 ---
 
-## 14. Zero-to-Hero Checklist — Decision Fluency
+## 15. Zero-to-Hero Checklist — Decision Fluency
 
 - [ ] Given any layout ticket, I can answer "one dimension or two?" in under five seconds
 - [ ] I can state MDN's content-out vs layout-in distinction from memory
@@ -502,7 +994,7 @@ If any box is unchecked, rebuild that pattern from this doc's section, from memo
 
 ---
 
-## 15. Further Reading
+## 16. Further Reading
 
 - MDN — [Relationship of Grid Layout with Other Layout Methods](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Relationship_of_grid_layout_with_other_layout_methods) — the decision framework Section 1 is built on
 - CSS-Tricks — [A Complete Guide to Grid](https://css-tricks.com/snippets/css/complete-guide-grid/) — source of Patterns 3 and 4
@@ -511,6 +1003,6 @@ If any box is unchecked, rebuild that pattern from this doc's section, from memo
 - MDN — [`repeat()`](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat) and [`minmax()`](https://developer.mozilla.org/en-US/docs/Web/CSS/minmax) — full syntax reference for Pattern 3
 - MDN — [`scroll-snap-type`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-type) — full reference for Pattern 7's Reel mechanism
 
-## 16. Bridge Forward
+## 17. Bridge Forward
 
 Session S04 is pure integration — no new theory. Every one of these nine patterns is a direct candidate for pieces of that build: the BIA chat UI's outer shell is Pattern 6 (Holy Grail) simplified to two columns instead of three, its sidebar history list is Pattern 2's Stack, and its suggested-action chips are Pattern 7's Reel or Pattern 1's Cluster depending on whether they should scroll or wrap. Walking into S04 already able to *name* which pattern each piece of that UI is, before writing the CSS, is the entire payoff of this document.

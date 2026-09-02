@@ -1,0 +1,13 @@
+/* styles.css */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    max-width: 400px;
+    /* readable line length — S02 §5 */
+    margin: 10px;
+    /* margin: auto trick — S02 §4 */
+    padding: 16px;
+}
