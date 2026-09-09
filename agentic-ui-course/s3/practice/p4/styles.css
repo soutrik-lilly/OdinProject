@@ -1,0 +1,40 @@
+/*
+What is happening here is that we are defining a CSS grid layout for a dashboard with named areas for the header, navigation, main content, and footer.
+
+grid-template-areas: What in principle it is doing is defining the layout of the grid by naming the areas for the header, navigation, main content, and footer.
+grid-template-columns: By definition, this property specifies the width of the columns in the grid and how space is distributed among them for the entire grid.the meaning of the value specified here are 220px for the first column and 1fr (one fraction of the remaining space) for the second column.
+grid-template-rows: This property specifies the height of the rows in the grid and how space is distributed among them.The meaning of the value specified here are `auto` for the first row, `1fr` (one fraction of the remaining space) for the second row, and `auto` for the third row.
+*/
+.dashboard {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+    gap: 16px;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100dvh;
+}
+
+/*
+.class > element {
+    grid-area: area-name;
+}
+The meaning of the above CSS is that it assigns each direct child element of the `.dashboard` class to a specific grid area defined earlier.The `header` element goes to the `header` area, the `nav` element goes to the `sidebar` area, the `main` element goes to the `main` area, and the `footer` element goes to the `footer` area.
+*/
+.dashboard>header {
+    grid-area: header;
+}
+
+.dashboard>nav {
+    grid-area: sidebar;
+}
+
+.dashboard>main {
+    grid-area: main;
+}
+
+.dashboard>footer {
+    grid-area: footer;
+}
