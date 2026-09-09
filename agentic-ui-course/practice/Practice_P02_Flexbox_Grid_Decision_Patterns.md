@@ -1,9 +1,11 @@
 # Practice & Application Guide — Flexbox vs Grid: The Decision Framework
+
 ### Nine Globally-Used Layout Patterns, With the Reasoning For Why Each One Chose Its Tool
 
 **Builds on:** [Session S03 — CSS Layout](../s3/Session_S03_CSS_Layout.md) (Sections 2–4)
 **Prerequisites:** S01, S02, and S03 read at least once.
 **Grounded against, live, this session** (not recalled from memory — fetched and cross-checked while building this doc):
+
 - MDN — [*Relationship of Grid Layout with Other Layout Methods*](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Relationship_of_grid_layout_with_other_layout_methods) — the official decision framework this whole doc is organized around
 - CSS-Tricks — [*A Complete Guide to Grid*](https://css-tricks.com/snippets/css/complete-guide-grid/) — the industry's most-referenced Grid reference, source of two of the patterns below
 - [Every Layout](https://every-layout.dev/) — the naming convention (Stack, Cluster, Sidebar, Center, Cover, Reel) that real component libraries (Chakra UI, Braid, and others) actually ship as primitives
@@ -17,6 +19,7 @@
 **My role:** teach you to *decide*, not just to *write* Flexbox or Grid syntax. Anyone can look up `justify-content: center`. The actual industry skill — the thing a senior engineer does in a code review that a junior doesn't — is looking at a UI problem for two seconds and knowing which tool it is, *before* writing a single property. That's this document's only real goal.
 
 **The plan I followed:**
+
 1. Pulled MDN's own stated decision criteria (not folklore) for when Grid beats Flexbox and vice versa.
 2. Cross-checked against CSS-Tricks' Grid guide for the two most industry-cited concrete patterns (responsive card grids, named-area dashboards).
 3. Cross-checked against Every Layout's pattern vocabulary — because "build me a Cluster" or "this needs a Sidebar pattern" is genuinely how layout gets discussed in real PR reviews and design-system docs, and knowing the *name* alongside the *mechanism* is part of being fluent, not decoration.
@@ -64,7 +67,7 @@ The moment you catch yourself writing `flex-shrink: 0` and explicit pixel widths
 ### The Every Layout vocabulary — the names your team will actually use
 
 | Pattern name | Mechanism | One-line description |
-|---|---|---|
+| --- | --- | --- |
 | **Stack** | Flexbox column + `gap` | Vertical rhythm — consistent spacing between stacked elements |
 | **Cluster** | Flexbox row + `flex-wrap: wrap` + `gap` | An unpredictable number of same-ish items that should wrap, not overflow (tags, pills, nav links) |
 | **Sidebar** | Flexbox row, one fixed-width child, one `flex: 1` child | A fixed-width column next to a fluid one |
@@ -80,7 +83,7 @@ You'll recognize every mechanism in that table — you already learned all of th
 ## 2. Concept Coverage Map
 
 | Pattern | Tool | S03 Section | Every Layout Name |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1. Navbar | Flexbox | §2 | Cluster + Sidebar |
 | 2. Sticky-Footer Page Shell | Flexbox | §2 | Stack |
 | 3. Responsive Card Grid | Grid | §3 | "Grid" |
@@ -96,18 +99,21 @@ You'll recognize every mechanism in that table — you already learned all of th
 ## 3. Pattern 1 — The Navigation Bar (Flexbox)
 
 ### Real-world context
+
 Every product on the internet has one. It's the single most-repeated layout job in front-end work.
 
 ### Objective
+
 Logo pinned left, nav links grouped in the middle, a CTA button pinned right — all in one flex container, no Grid.
 
 ### Decision reasoning
+
 **One dimension** (a single horizontal line) and **content-out** (the number of nav links is small and known, but their combined width isn't fixed) → Flexbox, per Question 1 and 2. This is a textbook Cluster/Sidebar hybrid: three distinct groups distributed along one axis.
 
 ### What We're Building — the Component List
 
 | # | Component | Element | Role in the Flex row |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Logo | `.logo` | Left-pinned, fixed content |
 | 2 | Nav links | `.nav-links` (nested flex container) | Middle group — its own Cluster, nested inside the outer Sidebar-style row |
 | 3 | CTA button | `.cta` | Right-pinned |
@@ -160,10 +166,12 @@ Logo pinned left, nav links grouped in the middle, a CTA button pinned right —
 ```
 
 ### Explain
+
 - `justify-content: space-between` on the *outer* flex container does all the heavy lifting — three children (logo, list, button), pushed to the two ends with the middle one absorbing whatever's between. (S03 §2)
 - The nav links are their *own nested flex container* — a Cluster inside a Sidebar-style outer arrangement. Nesting flex containers, not reaching for Grid, is correct here because both layers are genuinely one-dimensional.
 
 ### Do This Yourself
+
 Resize the browser narrower until the three links plus the button plus the logo can no longer fit on one line at their natural size. Watch what happens (they shrink, per `flex-wrap`'s `nowrap` default from S03 §2) — then decide, as a real engineer would, whether that's acceptable here or whether this specific navbar needs a mobile hamburger pattern instead (a decision for S04+, not this doc — the point is recognizing the moment you'd need it).
 
 ---
@@ -171,15 +179,17 @@ Resize the browser narrower until the three links plus the button plus the logo 
 ## 4. Pattern 2 — The Sticky-Footer Page Shell (Flexbox)
 
 ### Real-world context
+
 A page whose content is sometimes short and sometimes long, but the footer must always sit at the bottom of the *viewport* on short pages, and at the bottom of *content* on long pages — never floating mid-screen. One of the most commonly mis-solved layout problems on the web before Flexbox existed.
 
 ### Decision reasoning
+
 This is a **column of exactly three regions, stacked** — one dimension. Content-out: `main` should absorb however much space is left, whatever its content height turns out to be. Textbook Stack, with one child told to grow.
 
 ### What We're Building — the Component List
 
 | # | Component | Role |
-|---|---|---|
+| --- | --- | --- |
 | 1 | `header` | Fixed natural height, top of the column |
 | 2 | `main` | `flex: 1` — absorbs all leftover vertical space, whatever it turns out to be |
 | 3 | `footer` | Fixed natural height, always immediately after `main`, never floating |
@@ -207,6 +217,14 @@ This is a **column of exactly three regions, stacked** — one dimension. Conten
 
 ### Code
 
+```html
+<div class="page">
+  <header>Header</header>
+  <main>Main content — however tall it needs to be</main>
+  <footer>Footer</footer>
+</div>
+```
+
 ```css
 .page {
   display: flex;
@@ -220,10 +238,12 @@ main {
 ```
 
 ### Explain
+
 - `min-height: 100dvh` guarantees the column is *at least* one full screen tall — so on short pages, the footer is still pushed to the visual bottom of the viewport (S03 §5's `dvh` payoff, applied here for a different reason than the chat shell used it).
 - `main { flex: 1; }` is the entire trick: on a short page, `main` stretches to fill the gap; on a long page, `main` simply grows past 100dvh and the whole page scrolls normally, footer following naturally at the true end of content. No media query, no JavaScript, no magic numbers.
 
 ### Do This Yourself
+
 Build this with three regions containing one line of placeholder text each. Confirm the footer sits at the bottom of the screen. Then paste 40 paragraphs into `main` and confirm the footer moves to the bottom of *that* content instead, with the whole page now scrolling.
 
 ---
@@ -231,9 +251,11 @@ Build this with three regions containing one line of placeholder text each. Conf
 ## 5. Pattern 3 — The Responsive Card Grid (Grid)
 
 ### Real-world context
+
 Product listings, blog post grids, a dashboard's metric tiles — "N cards, however many fit per row, responsive, with zero media queries." CSS-Tricks calls the mechanism below "one of the all-time great CSS tricks," and it is genuinely everywhere in production.
 
 ### Decision reasoning
+
 **Two dimensions** — rows *and* columns need to reflow together as the viewport changes — and the number of items is unpredictable, which is exactly the case Grid's `auto-fit`/`auto-fill` machinery exists for. This is also a case where reaching for Flexbox would immediately trigger Question 3's warning sign: you'd need explicit widths and `flex-wrap` fighting to fake what Grid does natively.
 
 ### What We're Building — the Component List
@@ -264,6 +286,18 @@ Narrow viewport (1 col)     Medium (2 col)              Wide (4 col)
 
 ### Code
 
+```html
+<div class="card-grid">
+  <div class="card">Card 1</div>
+  <div class="card">Card 2</div>
+  <div class="card">Card 3</div>
+  <div class="card">Card 4</div>
+  <div class="card">Card 5</div>
+  <div class="card">Card 6</div>
+  <div class="card">Card 7</div>
+</div>
+```
+
 ```css
 .card-grid {
   display: grid;
@@ -273,10 +307,12 @@ Narrow viewport (1 col)     Medium (2 col)              Wide (4 col)
 ```
 
 ### Explain
+
 - `repeat(auto-fit, minmax(240px, 1fr))` reads as: "fit as many columns as will hold at least 240px each; whatever's left over, split evenly (`1fr`) among however many columns fit." No breakpoint, no `@media` query, no JavaScript resize listener.
 - `auto-fit` vs `auto-fill` — the one subtlety worth knowing by name: `auto-fit` collapses empty leftover tracks so existing cards stretch to fill the row; `auto-fill` leaves them as empty invisible tracks, so cards stay at their `minmax` size even with room to spare. For a card gallery, you almost always want `auto-fit`.
 
 ### Do This Yourself
+
 Build a grid of 7 placeholder cards with this rule. Resize the browser from very narrow to very wide and confirm the column count changes on its own — 1 column, then 2, then 3+ — with zero breakpoints written.
 
 ---
@@ -284,15 +320,17 @@ Build a grid of 7 placeholder cards with this rule. Resize the browser from very
 ## 6. Pattern 4 — The Named-Area Dashboard Shell (Grid)
 
 ### Real-world context
+
 Nearly every admin panel, analytics tool, and the BIA app itself: header across the top, sidebar down one side, main content, footer across the bottom. CSS-Tricks' own guide uses almost this exact four-region template as its flagship Grid example.
 
 ### Decision reasoning
+
 Rows *and* columns, planned together, with a known shape decided before content exists — the purest possible case of MDN's "layout-in" description. This is also the layout where naming areas (instead of counting grid lines) becomes a real maintainability win, not a novelty.
 
 ### What We're Building — the Component List
 
 | # | Component | `grid-area` | Role |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | `header` | `header` | Spans both columns, top row |
 | 2 | `nav` (sidebar) | `sidebar` | Fixed 220px column |
 | 3 | `main` | `main` | Fluid `1fr` column, absorbs remaining width |
@@ -320,6 +358,15 @@ Rows *and* columns, planned together, with a known shape decided before content 
 
 ### Code
 
+```html
+<div class="dashboard">
+  <header>Header</header>
+  <nav>Sidebar nav</nav>
+  <main>Main content</main>
+  <footer>Footer</footer>
+</div>
+```
+
 ```css
 .dashboard {
   display: grid;
@@ -339,11 +386,13 @@ Rows *and* columns, planned together, with a known shape decided before content 
 ```
 
 ### Explain
+
 - `grid-template-areas` is a literal ASCII map of the layout — you can *see* the shape in the CSS itself, which is exactly why CSS-Tricks singles it out: it's self-documenting in a way `grid-column: 2 / 4` never is.
 - Each area string must form a valid rectangle — you cannot describe an L-shape with `grid-template-areas` (that requires manual line-based placement instead). Knowing this boundary is part of knowing the tool, not a gotcha to memorize separately.
 - Compare this directly to S03 §3's `.app-shell` (`grid-template-columns: 260px 1fr` with only 2 explicit regions) — this pattern is the *same mechanism*, extended to four named regions instead of two anonymous ones. Named areas become worth the extra syntax once you're past 2–3 regions.
 
 ### Do This Yourself
+
 Delete the `sidebar` row entirely (change the area string's first two rows to `"header header"` / `"main main"`) and confirm the sidebar column collapses out of the layout without touching `grid-template-columns` at all — Grid recalculates around the areas you actually declared.
 
 ---
@@ -351,9 +400,11 @@ Delete the `sidebar` row entirely (change the area string's first two rows to `"
 ## 7. Pattern 5 — The Media Object / Chat Row (Flexbox)
 
 ### Real-world context
+
 An avatar next to a name and message, a comment with a profile picture, a product thumbnail next to its description — this exact shape appears dozens of times in almost every real UI you've ever used, under the classic name "the media object" (coined by Nicole Sullivan, one of the most-cited layout patterns in CSS history).
 
 ### Decision reasoning
+
 One dimension (a fixed-width image, an flexible-width text block, side by side) — a Sidebar pattern by another name. Content-out: the text block's height is whatever the message needs; the image never changes size regardless.
 
 ### What We're Building — the Component List
@@ -413,10 +464,12 @@ One dimension (a fixed-width image, an flexible-width text block, side by side) 
 ```
 
 ### Explain
+
 - `flex-shrink: 0` on the avatar is doing real work here, not decoration: without it, a long unbroken message could visually compress the avatar under space pressure — exactly the scenario S03 §2 names it for.
 - `align-items: flex-start` (not the `stretch` default) is the correct choice specifically because a multi-line message shouldn't force the avatar to stretch tall to match — it should stay pinned to the top, its natural size.
 
 ### Do This Yourself
+
 Paste a very long, multi-line message into `.message-content`. Confirm the avatar stays exactly 40×40px at the top of the row, rather than stretching or shrinking.
 
 ---
@@ -424,15 +477,17 @@ Paste a very long, multi-line message into `.message-content`. Confirm the avata
 ## 8. Pattern 6 — The "Holy Grail" Three-Column Layout (Grid outer, Flexbox inner)
 
 ### Real-world context
+
 Header, footer, and three middle columns (left nav, main content, right rail) — the layout that was infamous for requiring float/table hacks before Grid existed, hence the "holy grail" nickname developers gave it.
 
 ### Decision reasoning
+
 The outer shape (header/middle-row/footer, with the middle row split into three columns) is genuinely two-dimensional → Grid. Each individual column's *internal* content, though, is usually a simple vertical stack → Flexbox nested inside, exactly the composition principle S03 §3 names directly ("Grid for the shell, Flexbox for what's inside a cell").
 
 ### What We're Building — the Component List
 
 | # | Component | Tool | Role |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Outer shell (`header`/`nav`/`main`/`aside`/`footer`) | Grid | 2D — header and footer span all three columns; the middle row splits into three |
 | 2 | `nav` internals (the link list) | Flexbox (nested Stack) | 1D — a simple vertical list, doesn't need Grid's power |
 | 3 | `main`, `aside` | Grid areas | Passive content regions, no special internal layout needed for this exercise |
@@ -454,11 +509,25 @@ The outer shape (header/middle-row/footer, with the middle row split into three 
 
 1. Write the outer `.holy-grail` container with all five children (`header`, `nav`, `main`, `aside`, `footer`) as flat siblings.
 2. Apply the Grid shell: `grid-template-columns: 200px 1fr 200px; grid-template-rows: auto 1fr auto;` plus the `grid-template-areas` map.
-3. Assign `grid-area` to `nav`, `main`, `aside` (header/footer already span by default row placement, or assign them explicitly too).
+3. Assign `grid-area` to every direct child — `header`, `nav`, `main`, `aside`, and `footer` all need an explicit `grid-area`, since Grid only maps an element into a named area when that element's `grid-area` says so; nothing is inferred from tag name alone.
 4. Nest a Flexbox Stack *only* inside `nav`: `display: flex; flex-direction: column; gap: 0.5rem;` — resist the urge to make this Grid too.
 5. Verify: change `grid-template-columns` to `1fr 3fr 1fr` and predict the new pixel widths on a 1000px viewport before reloading.
 
 ### Code
+
+```html
+<div class="holy-grail">
+  <header>Header</header>
+  <nav>
+    <a href="#">Link one</a>
+    <a href="#">Link two</a>
+    <a href="#">Link three</a>
+  </nav>
+  <main>Main content</main>
+  <aside>Aside content</aside>
+  <footer>Footer</footer>
+</div>
+```
 
 ```css
 .holy-grail {
@@ -472,9 +541,11 @@ The outer shape (header/middle-row/footer, with the middle row split into three 
   min-height: 100dvh;
 }
 
+.holy-grail header { grid-area: header; }
 .holy-grail nav    { grid-area: nav; }
 .holy-grail main   { grid-area: main; }
 .holy-grail aside  { grid-area: aside; }
+.holy-grail footer { grid-area: footer; }
 
 .holy-grail nav {
   display: flex;
@@ -484,10 +555,12 @@ The outer shape (header/middle-row/footer, with the middle row split into three 
 ```
 
 ### Explain
+
 - One `grid-template-areas` declaration replaces what used to take an entire blog post's worth of float/clearfix workarounds in pre-2017 CSS — worth knowing as production-relevant history, not trivia: if you ever inherit a legacy codebase using floats for this, you're looking at a Grid refactor opportunity, not a design problem.
 - The nested `display: flex; flex-direction: column;` inside `nav` is a Stack — the internal nav links only need one-dimensional stacking, so nesting Grid-inside-Grid here would be reaching for more power than the sub-problem needs (the same discipline S03 §3 explicitly warns against: "using Grid everywhere because it's more powerful is not the right instinct").
 
 ### Do This Yourself
+
 Swap `grid-template-columns: 200px 1fr 200px` for `grid-template-columns: 1fr 3fr 1fr` and predict, before reloading, whether the middle column gets wider or narrower relative to the sides on a 1000px-wide viewport. *(Wider — proportionally 600px vs 200px each, versus the fixed 200px sides plus flexible middle in the original. This is the `fr`-unit arithmetic from S03 §3, applied to three tracks instead of two.)*
 
 ---
@@ -495,9 +568,11 @@ Swap `grid-template-columns: 200px 1fr 200px` for `grid-template-columns: 1fr 3f
 ## 9. Pattern 7 — The Horizontal Scroll Rail (Flexbox — the "Reel")
 
 ### Real-world context
+
 Netflix's row of thumbnails, an e-commerce "related products" carousel, Instagram/WhatsApp-style story bars. All the same underlying pattern, and all built the same simple way in modern CSS — no JavaScript carousel library required for the base case.
 
 ### Decision reasoning
+
 One dimension, explicitly *not* wrapping — this is a case where you actively want `flex-wrap`'s default `nowrap` behavior (S03 §2) instead of fighting it, combined with horizontal scrolling instead of shrinking.
 
 ### What We're Building — the Component List
@@ -525,6 +600,21 @@ One dimension, explicitly *not* wrapping — this is a case where you actively w
 
 ### Code
 
+```html
+<div class="reel">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+  <div>Item 4</div>
+  <div>Item 5</div>
+  <div>Item 6</div>
+  <div>Item 7</div>
+  <div>Item 8</div>
+  <div>Item 9</div>
+  <div>Item 10</div>
+</div>
+```
+
 ```css
 .reel {
   display: flex;
@@ -542,11 +632,13 @@ One dimension, explicitly *not* wrapping — this is a case where you actively w
 ```
 
 ### Explain
+
 - `overflow-x: auto` plus the default `nowrap` is the entire mechanism — items are never allowed to wrap or shrink, so once they exceed the container's width, the container simply becomes scrollable instead.
 - `scroll-snap-type` + `scroll-snap-align` are new vocabulary (not covered in S03) but built on nothing except what you already know: they make the browser "snap" the scroll position to align with an item's edge after a swipe/scroll gesture, entirely native, no JS.
 - Watch the `overflow` interaction: if this `.reel` ever needs to live inside a `position: sticky` ancestor, S03 §4's central gotcha applies directly — `overflow-x: auto` here creates a new scrolling context, so don't nest a sticky element that expects to stick to the *page* inside this rail.
 
 ### Do This Yourself
+
 Build this with 10 placeholder 200px-wide boxes. Confirm the row scrolls horizontally instead of wrapping to new lines or shrinking every box — the direct, deliberate opposite of Pattern 1's navbar, where shrinking-under-pressure was the (undesirable) default you were warned about.
 
 ---
@@ -554,15 +646,17 @@ Build this with 10 placeholder 200px-wide boxes. Confirm the row scrolls horizon
 ## 10. Pattern 8 — The Asymmetric "Bento" Grid (Grid, with spanning)
 
 ### Real-world context
+
 Apple's product marketing pages, Pinterest-style boards, a "featured + 4 smaller" hero section on a homepage. Genuinely one of the most requested modern layout styles in 2024–2026 design briefs — irregular tile sizes in an otherwise organized grid.
 
 ### Decision reasoning
+
 Two dimensions, and specifically **irregular spans** — some cells are bigger than others by design, which only Grid can express (`repeat(auto-fit, minmax())` alone gives you *uniform* responsive tiles; a Bento layout needs individual cells to deliberately break that uniformity).
 
 ### What We're Building — the Component List
 
 | # | Component | Span | Role |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | `.featured` | `grid-column: span 2; grid-row: span 2;` | Large 2×2 hero tile |
 | 2 | `.wide` | `grid-column: span 2;` | Medium 2×1 tile |
 | 3 | Remaining tiles | none (implicit 1×1) | Auto-placed by Grid around the spanning tiles |
@@ -589,6 +683,17 @@ Two dimensions, and specifically **irregular spans** — some cells are bigger t
 
 ### Code
 
+```html
+<div class="bento">
+  <div class="featured">Featured</div>
+  <div class="wide">Wide</div>
+  <div>Tile A</div>
+  <div>Tile B</div>
+  <div>Tile C</div>
+  <div>Tile D</div>
+</div>
+```
+
 ```css
 .bento {
   display: grid;
@@ -608,10 +713,12 @@ Two dimensions, and specifically **irregular spans** — some cells are bigger t
 ```
 
 ### Explain
+
 - `grid-column: span 2` tells one specific child "occupy two columns starting from wherever the auto-placement algorithm puts you" — this is the mechanism, and it composes with the *implicit* placement Grid already does for every other, non-spanning child.
 - This is the direct, practical answer to "how do sites build those uneven hero-plus-thumbnails sections" — it's not a special layout mode, it's this one property applied selectively.
 
 ### Do This Yourself
+
 Build a 6-item bento grid with one `.featured` (2×2) item and confirm the remaining 5 items auto-place themselves around it without you manually specifying their positions — only the "special" cell needed an explicit span.
 
 ---
@@ -619,9 +726,11 @@ Build a 6-item bento grid with one `.featured` (2×2) item and confirm the remai
 ## 11. Pattern 9 — Aligned Form Rows (Grid) — the Case Flexbox Genuinely Can't Do Well
 
 ### Real-world context
+
 A settings form with several label/input pairs stacked vertically, where every label column should line up to the same width — a genuinely common design request ("make the labels align") that trips people up specifically because they reach for Flexbox first.
 
 ### Decision reasoning
+
 This is the sharpest possible illustration of Question 3's warning sign. With Flexbox, each label/input pair is its *own separate flex container* — so there is no way for one row's label width to influence another row's label width; you'd have to measure the longest label manually and hard-code a `width`. Grid solves this natively: **columns are shared across every row of the grid**, by definition.
 
 ### What We're Building — the Component List
@@ -672,10 +781,12 @@ Message                  [__________________]
 ```
 
 ### Explain
+
 - Because `.aligned-form` is **one single grid**, not three separate rows, `grid-template-columns: auto 1fr` means "the first column is exactly as wide as its widest label, shared across every row" — "Email address" and "Name" both belong to the *same* column, so the column width is computed once, from the widest occupant, and every row respects it.
 - This is the exact case where Flexbox would force you to either manually set a `width` on every label (fragile — breaks the moment copy changes) or restructure into a Grid anyway. Recognizing this *before* writing the Flexbox version that later needs a rewrite is the actual point of Question 3.
 
 ### Do This Yourself
+
 Change "Email address" to something much longer ("Preferred contact email address"). Reload and confirm the *entire first column* — including "Name" and "Message"'s labels — widens together, automatically, with zero CSS changes required.
 
 ---
@@ -691,7 +802,7 @@ Build one real, working page — a BIA analytics dashboard with an embedded assi
 ### What We're Building — the Component List
 
 | # | Component | Pattern used | Tool |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Outer page shell (navbar / sidebar / main / footer regions) | Pattern 6, simplified to 2 columns | Grid |
 | 2 | Top navbar (logo, links, sign-out) | Pattern 1 | Flexbox |
 | 3 | Left sidebar nav (4 stacked links) | Pattern 2 (Stack) | Flexbox |
@@ -939,7 +1050,7 @@ Build outside-in — shell first, then fill each region. Building inside-out (ch
 ## 13. Quick-Reference: Signal → Tool
 
 | If the ticket says... | Reach for | Why |
-|---|---|---|
+| --- | --- | --- |
 | "row of buttons/links/tags" | Flexbox | 1D, content-out |
 | "space these evenly" | Flexbox `justify-content` | MDN's own stated ideal Flexbox use case |
 | "N cards, responsive, no breakpoints" | Grid `auto-fit`/`minmax` | 2D + unpredictable count |
