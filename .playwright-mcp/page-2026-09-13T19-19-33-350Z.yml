@@ -1,0 +1,27 @@
+- generic [active] [ref=e1]:
+  - checkbox "Toggle chat history" [ref=e2]
+  - generic [ref=e3]:
+    - navigation "Chat history" [ref=e4]:
+      - heading "BIA Assistant" [level=1] [ref=e6]
+      - list [ref=e7]:
+        - listitem "Kubernetes manifest question — unread" [ref=e8]: Kubernetes manifest question
+        - listitem [ref=e9]: Drizzle schema review
+        - listitem [ref=e10]: SSE parsing bug
+    - generic [ref=e11]:
+      - banner [ref=e12]:
+        - text: ☰
+        - heading "Conversation" [level=2] [ref=e13]
+      - generic [ref=e14]:
+        - generic [ref=e15]: How do I parse SSE with a buffer?
+        - generic [ref=e17]:
+          - text: 🤖
+          - generic [ref=e18]: Accumulate chunks in a string, split on newline, and keep the last incomplete line in the buffer for next time.
+      - generic [ref=e19]:
+        - button "Explain a Kubernetes gotcha" [ref=e20]
+        - button "Review my Drizzle schema" [ref=e21]
+        - button "Debug an SSE parsing bug" [ref=e22]
+        - button "Compare REST vs GraphQL" [ref=e23]
+      - generic [ref=e24]:
+        - text: Your message
+        - textbox "Your message" [ref=e25]
+        - button "Send message" [ref=e26]: ↑

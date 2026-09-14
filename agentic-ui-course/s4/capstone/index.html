@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIA Assistant</title>
+</head>
+<body>
+
+  <input type="checkbox" id="sidebar-toggle">
+
+  <div class="app-shell">
+
+    <nav aria-label="Chat history">
+      <header>
+        <h1>BIA Assistant</h1>
+      </header>
+      <ul>
+        <li aria-label="Kubernetes manifest question — unread">Kubernetes manifest question</li>
+        <li>Drizzle schema review</li>
+        <li>SSE parsing bug</li>
+      </ul>
+    </nav>
+
+    <div class="chat-column">
+      <header>
+        <label for="sidebar-toggle" aria-label="Toggle chat history">☰</label>
+        <h2>Conversation</h2>
+      </header>
+
+      <div aria-live="polite">
+        <div class="message user">
+          <div class="bubble">How do I parse SSE with a buffer?</div>
+        </div>
+        <div class="message assistant">
+          <span aria-hidden="true">🤖</span>
+          <div class="bubble">Accumulate chunks in a string, split on newline, and keep the last incomplete line in the buffer for next time.</div>
+        </div>
+      </div>
+
+      <div class="suggested-actions">
+        <button type="button">Explain a Kubernetes gotcha</button>
+        <button type="button">Review my Drizzle schema</button>
+        <button type="button">Debug an SSE parsing bug</button>
+        <button type="button">Compare REST vs GraphQL</button>
+      </div>
+
+      <form>
+        <label for="chat-input">Your message</label>
+        <textarea id="chat-input" rows="1" required></textarea>
+        <button type="submit" aria-label="Send message">↑</button>
+        <button type="button" aria-label="Stop generating response" hidden>■</button>
+      </form>
+    </div>
+
+  </div>
+
+</body>
+</html>
